@@ -1,4 +1,4 @@
-# Theia End-to-End Test Suite ![main](https://github.com/eclipse-theia/theia-e2e-test-suite/actions/workflows/main.yml/badge.svg?branch=main) [![Report](https://img.shields.io/badge/Test%20Report-History-blue.svg)](https://eclipse-theia.github.io/theia-e2e-test-suite)
+# Theia End-to-End Test Suite ![main](https://github.com/eclipse-theia/theia-e2e-test-suite/actions/workflows/main.yml/badge.svg?branch=main) [![Report](https://img.shields.io/badge/Test-Report-blue.svg)](https://eclipse-theia.github.io/theia-e2e-test-suite) [![Report](https://img.shields.io/badge/Performance-Report-blue.svg)](https://eclipse-theia.github.io/theia-e2e-test-suite/performance)
 
 *A community-driven collection of end-to-end test cases to validate the user-facing behavior of [Theia](https://github.com/eclipse-theia/theia).*
 
