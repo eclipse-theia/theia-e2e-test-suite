@@ -1,5 +1,5 @@
 // *****************************************************************************
-// Copyright (C) 2021 logi.cals GmbH, EclipseSource and others.
+// Copyright (C) 2023 STMicroelectronics and others.
 //
 // This program and the accompanying materials are made available under the
 // terms of the Eclipse Public License v. 2.0 which is available at
@@ -15,28 +15,32 @@
 // *****************************************************************************
 
 import { PlaywrightTestConfig } from '@playwright/test';
+import { MetricsFetchConfig } from '../scripts/fetch-metrics';
 
-const config: PlaywrightTestConfig = {
+const performanceConfig: PlaywrightTestConfig = {
     testDir: '../lib/tests',
-    testMatch: ['**/*.test.js'],
-    workers: 2,
-    // Timeout for each test in milliseconds.
+    testMatch: ['**/*.performance.js'],
+    globalTeardown: require.resolve('../scripts/fetch-metrics.ts'),
+    workers: 1,
     timeout: 60 * 1000,
     use: {
         baseURL: 'http://localhost:3000',
         browserName: 'chromium',
-        screenshot: 'only-on-failure',
         viewport: { width: 1920, height: 1080 }
     },
-    snapshotDir: '../tests/snapshots',
-    expect: {
-        toMatchSnapshot: { threshold: 0.15 }
+    metadata: {
+        // custom metadata to configure /scripts/ci-global-tear-down.ts
+        performanceMetrics: <MetricsFetchConfig>{
+            metricsEndpoint: 'http://localhost:3000/metrics',
+            outputFileNamePrefix: '',
+            outputFileNamePostfix: '.txt',
+            outputFilePath: 'performance-metrics'
+        }
     },
     preserveOutput: 'failures-only',
     reporter: [
-        ['list'],
-        ['allure-playwright']
-    ]
+        ['list']
+    ],
 };
 
-export default config;
+export default performanceConfig;

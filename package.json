@@ -11,7 +11,9 @@
     "ui-tests-ci": "yarn && playwright test --config=./configs/playwright.ci.config.ts",
     "ui-tests-headful": "yarn && playwright test --config=./configs/playwright.headful.config.ts",
     "ui-tests-report-generate": "allure generate ./allure-results --clean -o allure-results/allure-report",
-    "ui-tests-report": "yarn ui-tests-report-generate && allure open allure-results/allure-report"
+    "ui-tests-report": "yarn ui-tests-report-generate && allure open allure-results/allure-report",
+    "performance": "yarn && playwright test --config=./configs/performance.config.ts",
+    "performance-report": "yarn && node lib/scripts/performance-report.js"
   },
   "dependencies": {
     "@playwright/test": "^1.35.1",
@@ -21,6 +23,12 @@
     "allure-commandline": "^2.23.0",
     "allure-playwright": "^2.4.0",
     "rimraf": "^3.0.0",
+    "node-fetch": "^2.6.7",
+    "@types/node-fetch": "^2.6.4",
+    "fs-extra": "^11.1.1",
+    "@types/fs-extra": "^11.0.1",
+    "yargs": "^17.7.2",
+    "@types/yargs": "^17.0.24",
     "typescript": "~4.5.5"
   }
 }
