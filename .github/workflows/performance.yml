@@ -74,6 +74,6 @@ jobs:
         if: always() && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3
         env:
-          PERSONAL_TOKEN: ${{ secrets.TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: ./public
+          personal_token: ${{ secrets.TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./public
