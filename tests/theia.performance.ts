@@ -16,12 +16,10 @@
 
 import { expect, test } from '@playwright/test';
 import { TheiaApp, TheiaTextEditor, TheiaWorkspace } from '@theia/playwright';
-import { allure } from "allure-playwright";
 
 test.describe('Theia App', () => {
 
     test('should be fast in opening, changing and saving a text file', async ({ browser }) => {
-        allure.tag('performance');
         const page = await browser.newPage();
         const ws = new TheiaWorkspace(['tests/resources/sample-files1']);
         const app = await TheiaApp.loadApp(page, TheiaApp, ws);
