@@ -1,9 +1,6 @@
 name: Performance
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
   schedule:
     - cron: "0 5 * * *" # Runs every day at 5am: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events-schedule
