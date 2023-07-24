@@ -65,7 +65,7 @@ export async function preparePerformanceReport({
     // copy history from the current gh-pages folder to new publish path
     console.log('Copying history');
     fs.emptyDirSync(publishPath);
-    fs.copySync(ghPagesPath, publishPath);
+    fs.copySync(ghPagesPath, publishPath, { filter: (src, dest) => !src.includes('.git') });
     // copy latest performance metrics into performance publish path
     console.log('Copying performance metrics');
     fs.ensureDirSync(`${publishPath}/${performancePublishPath}`);
