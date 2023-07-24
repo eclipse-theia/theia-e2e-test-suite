@@ -6,13 +6,15 @@
   "scripts": {
     "prepare": "yarn clean && yarn build",
     "clean": "rimraf lib tsconfig.tsbuildinfo",
-    "build": "tsc --incremental && npx playwright install chromium",
+    "build": "tsc --incremental && if-env SKIP_CHROMIUM_INSTALLATION=1 && echo 'Skipping chromium install' || npx playwright install chromium",
     "ui-tests": "yarn && playwright test --config=./configs/playwright.config.ts",
     "ui-tests-ci": "yarn && playwright test --config=./configs/playwright.ci.config.ts",
     "ui-tests-headful": "yarn && playwright test --config=./configs/playwright.headful.config.ts",
     "ui-tests-report-generate": "allure generate ./allure-results --clean -o allure-results/allure-report",
     "ui-tests-report": "yarn ui-tests-report-generate && allure open allure-results/allure-report",
-    "performance": "yarn && playwright test --config=./configs/performance.config.ts",
+    "performance": "yarn run performance-on-chromium",
+    "performance-on-chromium": "yarn && playwright test --config=./configs/performance.config.ts --project=chromium",
+    "performance-on-chrome": "yarn && playwright test --config=./configs/performance.config.ts --project=Chrome",
     "performance-report": "yarn && node lib/scripts/performance-report.js"
   },
   "dependencies": {
@@ -29,6 +31,7 @@
     "@types/fs-extra": "^11.0.1",
     "yargs": "^17.7.2",
     "@types/yargs": "^17.0.24",
+    "if-env": "^1.0.4",
     "typescript": "~4.5.5"
   }
 }

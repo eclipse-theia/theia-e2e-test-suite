@@ -14,10 +14,10 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { PlaywrightTestConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 import { MetricsFetchConfig } from '../scripts/fetch-metrics';
 
-const performanceConfig: PlaywrightTestConfig = {
+export default defineConfig({
     testDir: '../lib/tests',
     testMatch: ['**/*.performance.js'],
     globalTeardown: require.resolve('../scripts/fetch-metrics.ts'),
@@ -25,7 +25,6 @@ const performanceConfig: PlaywrightTestConfig = {
     timeout: 60 * 1000,
     use: {
         baseURL: 'http://localhost:3000',
-        browserName: 'chromium',
         viewport: { width: 1920, height: 1080 }
     },
     metadata: {
@@ -41,6 +40,17 @@ const performanceConfig: PlaywrightTestConfig = {
     reporter: [
         ['list']
     ],
-};
-
-export default performanceConfig;
+    projects: [
+        {
+            name: 'chromium',
+            use: { ...devices['Desktop Chrome'] },
+        },
+        {
+            name: 'Chrome',
+            use: {
+                ...devices['Desktop Chrome'],
+                channel: 'chrome'
+            },
+        }
+    ]
+});
