@@ -105,19 +105,19 @@ export async function generatePerformanceReport(path: string) {
             data: {
             datasets: [{
                 label: '${valueLabel}',
-                data: ${JSON.stringify(data)},
-                options: {
-                    plugins: {
-                        annotation: {
-                            annotations: {
-                                averageLine,
-                                stdDerivationUpper,
-                                stdDerivationLower
-                            }
+                data: ${JSON.stringify(data)}
+            }]
+            },
+            options: {
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            averageLine,
+                            stdDerivationUpper,
+                            stdDerivationLower
                         }
                     }
                 }
-            }]
             }
         });
         </script>
@@ -130,11 +130,11 @@ export async function generatePerformanceReport(path: string) {
         <head>
         <meta charset="utf-8">
         <title>Theia Performance Report</title>
-        <meta name="description" content="Theia Performance Report">
+        <meta name="description" content="Theia Performance Report"/>
+        <meta http-equiv="Permissions-Policy" content="interest-cohort=(), user-id=()" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.3/chart.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.3/chart.umd.min.js"></script>
-        <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
         <script>
             function lastN(values, n = 10) {
                 if (values.length > n) {
