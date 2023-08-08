@@ -105,7 +105,18 @@ export async function generatePerformanceReport(path: string) {
             data: {
             datasets: [{
                 label: '${valueLabel}',
-                data: ${JSON.stringify(data)}
+                data: ${JSON.stringify(data)},
+                options: {
+                    plugins: {
+                        annotation: {
+                            annotations: {
+                                averageLine,
+                                stdDerivationUpper,
+                                stdDerivationLower
+                            }
+                        }
+                    }
+                }
             }]
             }
         });
@@ -120,7 +131,78 @@ export async function generatePerformanceReport(path: string) {
         <meta charset="utf-8">
         <title>Theia Performance Report</title>
         <meta name="description" content="Theia Performance Report">
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.3/chart.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.3/chart.umd.min.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
+        <script>
+            function lastN(values, n = 10) {
+                if (values.length > n) {
+                    return values.slice(-n);
+                }
+                return values;
+            }
+            function average10(ctx) {
+                let values = lastN(ctx.chart.data.datasets[0].data.map((entry) => entry.y));
+                return values.reduce((a, b) => a + b, 0) / values.length;
+            }
+            function standardDeviation10(ctx) {
+                const values = lastN(ctx.chart.data.datasets[0].data.map((entry) => entry.y));
+                const n = values.length;
+                const mean = average10(ctx);
+                return Math.sqrt(values.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n);
+            }
+            const averageLine = {
+                type: 'line',
+                borderColor: 'rgba(100, 149, 237, 0.5)',
+                borderDash: [6, 6],
+                borderDashOffset: 0,
+                borderWidth: 3,
+                label: {
+                    display: true,
+                    backgroundColor: 'rgba(100, 149, 237, 0.75)',
+                    content: (ctx) => 'Average(10): ' + average10(ctx).toFixed(2)
+                },
+                scaleID: 'y',
+                value: (ctx) => average10(ctx)
+            };
+            const stdDerivationUpper = {
+                type: 'line',
+                borderColor: 'rgba(102, 102, 102, 0.25)',
+                borderDash: [6, 6],
+                borderDashOffset: 0,
+                borderWidth: 3,
+                label: {
+                    display: true,
+                    backgroundColor: 'rgba(102, 102, 102, 0.5)',
+                    color: 'black',
+                    content: (ctx) => (average10(ctx) + standardDeviation10(ctx)).toFixed(2),
+                    position: 'start',
+                    rotation: -90,
+                    yAdjust: -28
+                },
+                scaleID: 'y',
+                value: (ctx) => average10(ctx) + standardDeviation10(ctx)
+            };
+            const stdDerivationLower = {
+                type: 'line',
+                borderColor: 'rgba(102, 102, 102, 0.25)',
+                borderDash: [6, 6],
+                borderDashOffset: 0,
+                borderWidth: 3,
+                label: {
+                    display: true,
+                    backgroundColor: 'rgba(102, 102, 102, 0.5)',
+                    color: 'black',
+                    content: (ctx) => (average10(ctx) - standardDeviation10(ctx)).toFixed(2),
+                    position: 'end',
+                    rotation: 90,
+                    yAdjust: 28
+                },
+                scaleID: 'y',
+                value: (ctx) => average10(ctx) - standardDeviation10(ctx)
+            };
+        </script>
         </head>
         
         <body>
