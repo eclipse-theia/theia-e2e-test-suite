@@ -220,11 +220,10 @@ export async function generatePerformanceReport(path: string) {
 
 export async function readValuesFromHistory(path: string, values: string[]): Promise<Map<string, ValueHistory>> {
     const valueHistoryMap = initializeValueHistoryMap(values);
-    const files = fs.readdirSync(path).sort();
+    const files = fs.readdirSync(path)
+        .filter(file => !file.endsWith('index.html'))
+        .sort((a, b) => toDate(a).getTime() - toDate(b).getTime());
     for (const file of files) {
-        if (file.endsWith('index.html')) {
-            continue;
-        }
         const entryLabel = file.substring(0, file.indexOf('.'));
         const entries = await readEntries(path + '/' + file, values);
         entries.forEach(entry =>
@@ -241,6 +240,13 @@ export function initializeValueHistoryMap(values: string[]) {
         valueHistoryMap.set(value, { valueLabel: value, history });
     }
     return valueHistoryMap;
+}
+
+export function toDate(fileName: string): Date {
+    const [date, timeString] = fileName.replace('.txt', '').split('T');
+    const dateFragments = date.split('-').map(str => Number.parseInt(str));
+    const timeFragments = timeString.split('-').map(str => Number.parseInt(str));
+    return new Date(dateFragments[0], dateFragments[1], dateFragments[2], timeFragments[0], timeFragments[1], timeFragments[2]);
 }
 
 export async function readEntries(path: string, values: string[]): Promise<{ valueLabel: string, entryValue: number }[]> {
