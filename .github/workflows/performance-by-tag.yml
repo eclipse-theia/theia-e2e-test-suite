@@ -1,0 +1,68 @@
+name: Performance comparison by tag
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Performance comparison with multiple versions of Theia on ubuntu-latest with Node.js 16.x
+    strategy:
+      matrix:
+        tag: ["v1.40.0", "v1.39.0", "v1.38.0"]
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js "16.x"
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Use Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Build
+        shell: bash
+        run: yarn
+
+      - name: Checkout Theia
+        uses: actions/checkout@v3
+        with:
+          repository: eclipse-theia/theia
+          ref: ${{ matrix.tag }}
+          path: ./theia
+
+      - name: Build Theia
+        shell: bash
+        working-directory: ./theia
+        run: |
+          yarn --skip-integrity-check --network-timeout 100000
+          yarn download:plugins
+          yarn browser build
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
+
+      - name: Run Theia
+        shell: bash
+        working-directory: ./theia
+        run: yarn browser start &
+
+      - name: Run Performance Measurement
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: yarn performance --repeat-each 3
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report-${{ matrix.tag }}
+          path: playwright-report/
+          retention-days: 3
