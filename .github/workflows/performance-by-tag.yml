@@ -56,7 +56,6 @@ jobs:
         working-directory: ./theia
         run: |
           yarn --skip-integrity-check --network-timeout 100000
-          yarn download:plugins
           yarn browser build
         env:
           NODE_OPTIONS: --max_old_space_size=4096
