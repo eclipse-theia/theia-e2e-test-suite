@@ -12,7 +12,15 @@ jobs:
     strategy:
       max-parallel: 1 # Avoid impacting the performance of each run
       matrix:
-        tag: ["v1.40.0", "v1.39.0", "v1.38.0", "v1.37.2", "v1.34.4", "v1.29.2"]
+        tag:
+          [
+            "v1.40.0",
+            "v1.39.0",
+            "v1.38.0",
+            "v1.37.2",
+            "v1.34.4",
+            "v1.29.2-community",
+          ]
 
     runs-on: ubuntu-latest
     timeout-minutes: 60
