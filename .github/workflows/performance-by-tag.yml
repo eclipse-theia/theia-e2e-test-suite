@@ -61,9 +61,10 @@ jobs:
       - name: Run Performance Measurement
         uses: GabrielBB/xvfb-action@v1
         with:
-          run: yarn performance --repeat-each 3
+          run: yarn performance --reporter=html --repeat-each 3
 
-      - uses: actions/upload-artifact@v3
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: playwright-report-${{ matrix.tag }}
