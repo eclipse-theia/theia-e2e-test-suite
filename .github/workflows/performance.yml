@@ -51,7 +51,7 @@ jobs:
       - name: Run Theia
         shell: bash
         working-directory: ./theia
-        run: yarn browser start &
+        run: yarn browser start:debug &
 
       - name: Run Performance Measurement
         uses: GabrielBB/xvfb-action@v1
