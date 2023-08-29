@@ -90,17 +90,29 @@ export async function generatePerformanceReport(path: string) {
         fs.removeSync(reportPath);
     }
 
-    const values = await readValuesFromHistory(path, ['process_cpu_seconds_total', 'playwright_total_time']);
+    const values = await readValuesFromHistory(path, [
+        'theia_measurements/frontend',
+        'theia_measurements/startContributions',
+        'theia_measurements/waitForDeployment',
+        'theia_measurements/revealShell',
+        'theia_measurements/deployPlugins',
+        'theia_measurements/syncPlugins',
+        'theia_measurements/loadPlugins',
+        'theia_measurements/startPlugins',
+        'process_cpu_seconds_total',
+        'playwright_total_time'
+    ]);
     const charts: string[] = [];
     for (const [valueLabel, valueHistory] of values) {
         const data = valueHistory.history.map(entry => ({ x: entry.entryLabel, y: entry.value }));
+        const valueId = valueLabel.replace('/', '_');
         charts.push(`
         <div class="chart">
         <h2>${valueLabel}</h2>
-        <canvas id="${valueLabel}" style="width:100%;max-height: 500px;"></canvas>
+        <canvas id="${valueId}" style="width:100%;max-height: 500px;"></canvas>
         <script>
-        const ctx${valueLabel} = document.getElementById('${valueLabel}');
-        new Chart(ctx${valueLabel}, {
+        const ctx${valueId} = document.getElementById('${valueId}');
+        new Chart(ctx${valueId}, {
             type: 'line',
             data: {
             datasets: [{
@@ -249,15 +261,29 @@ export function toDate(fileName: string): Date {
     return new Date(dateFragments[0], dateFragments[1], dateFragments[2], timeFragments[0], timeFragments[1], timeFragments[2]);
 }
 
+const nameAttribute = 'name="';
 export async function readEntries(path: string, values: string[]): Promise<{ valueLabel: string, entryValue: number }[]> {
     const entries: { valueLabel: string, entryValue: number }[] = [];
     try {
         const rl = readline.createInterface({ input: fs.createReadStream(path), crlfDelay: Infinity });
-        rl.on('line', (line) => {
+        rl.on('line', (line: string) => {
             for (const valueLabel of values) {
-                if (line.startsWith(valueLabel + ' ')) {
-                    const entryValue = Number.parseFloat(line.split(' ')[1]);
-                    entries.push({ valueLabel, entryValue });
+                const positionOfSlashInValueLabel = valueLabel.indexOf('/');
+                const isComplexLabel = positionOfSlashInValueLabel > -1;
+                const expectedLineStartForValueLabel = !isComplexLabel ? valueLabel + ' ' : valueLabel.substring(0, positionOfSlashInValueLabel) + '{';
+                if (line.startsWith(expectedLineStartForValueLabel)) {
+                    if (isComplexLabel && line.indexOf(nameAttribute) > -1) {
+                        const valueName = valueLabel.substring(positionOfSlashInValueLabel + 1);
+                        const lineStartingWithName = line.substring(line.indexOf(nameAttribute) + nameAttribute.length);
+                        if (lineStartingWithName.startsWith(valueName)) {
+                            const lineFragments = line.split(' ');
+                            const entryValue = Number.parseFloat(lineFragments[lineFragments.length - 1]);
+                            entries.push({ valueLabel, entryValue });
+                        }
+                    } else {
+                        const entryValue = Number.parseFloat(line.split(' ')[1]);
+                        entries.push({ valueLabel, entryValue });
+                    }
                 }
             }
         });
