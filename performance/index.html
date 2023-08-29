@@ -1,0 +1,369 @@
+
+        <!doctype html>
+        <head>
+        <meta charset="utf-8">
+        <title>Theia Performance Report</title>
+        <meta name="description" content="Theia Performance Report"/>
+        <meta http-equiv="Permissions-Policy" content="interest-cohort=(), user-id=()" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.3/chart.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.3/chart.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
+        <script>
+            function lastN(values, n = 10) {
+                if (values.length > n) {
+                    return values.slice(-n);
+                }
+                return values;
+            }
+            function average10(ctx) {
+                let values = lastN(ctx.chart.data.datasets[0].data.map((entry) => entry.y));
+                return values.reduce((a, b) => a + b, 0) / values.length;
+            }
+            function standardDeviation10(ctx) {
+                const values = lastN(ctx.chart.data.datasets[0].data.map((entry) => entry.y));
+                const n = values.length;
+                const mean = average10(ctx);
+                return Math.sqrt(values.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n);
+            }
+            const averageLine = {
+                type: 'line',
+                borderColor: 'rgba(100, 149, 237, 0.5)',
+                borderDash: [6, 6],
+                borderDashOffset: 0,
+                borderWidth: 3,
+                label: {
+                    display: true,
+                    backgroundColor: 'rgba(100, 149, 237, 0.75)',
+                    content: (ctx) => 'Average(10): ' + average10(ctx).toFixed(2)
+                },
+                scaleID: 'y',
+                value: (ctx) => average10(ctx)
+            };
+            const stdDerivationUpper = {
+                type: 'line',
+                borderColor: 'rgba(102, 102, 102, 0.25)',
+                borderDash: [6, 6],
+                borderDashOffset: 0,
+                borderWidth: 3,
+                label: {
+                    display: true,
+                    backgroundColor: 'rgba(102, 102, 102, 0.5)',
+                    color: 'black',
+                    content: (ctx) => (average10(ctx) + standardDeviation10(ctx)).toFixed(2),
+                    position: 'start',
+                    rotation: -90,
+                    yAdjust: -28
+                },
+                scaleID: 'y',
+                value: (ctx) => average10(ctx) + standardDeviation10(ctx)
+            };
+            const stdDerivationLower = {
+                type: 'line',
+                borderColor: 'rgba(102, 102, 102, 0.25)',
+                borderDash: [6, 6],
+                borderDashOffset: 0,
+                borderWidth: 3,
+                label: {
+                    display: true,
+                    backgroundColor: 'rgba(102, 102, 102, 0.5)',
+                    color: 'black',
+                    content: (ctx) => (average10(ctx) - standardDeviation10(ctx)).toFixed(2),
+                    position: 'end',
+                    rotation: 90,
+                    yAdjust: 28
+                },
+                scaleID: 'y',
+                value: (ctx) => average10(ctx) - standardDeviation10(ctx)
+            };
+        </script>
+        </head>
+        
+        <body>
+        <h1>Theia Performance Report</h1>
+        <div class="charts">
+        
+        <div class="chart">
+        <h2>theia_measurements/frontend</h2>
+        <canvas id="theia_measurements_frontend" style="width:100%;max-height: 500px;"></canvas>
+        <script>
+        const ctxtheia_measurements_frontend = document.getElementById('theia_measurements_frontend');
+        new Chart(ctxtheia_measurements_frontend, {
+            type: 'line',
+            data: {
+            datasets: [{
+                label: 'theia_measurements/frontend',
+                data: [{"x":"2023-8-29T14-21-9","y":4095.1840730000404}]
+            }]
+            },
+            options: {
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            averageLine,
+                            stdDerivationUpper,
+                            stdDerivationLower
+                        }
+                    }
+                }
+            }
+        });
+        </script>
+        </div>
+         
+        <div class="chart">
+        <h2>theia_measurements/startContributions</h2>
+        <canvas id="theia_measurements_startContributions" style="width:100%;max-height: 500px;"></canvas>
+        <script>
+        const ctxtheia_measurements_startContributions = document.getElementById('theia_measurements_startContributions');
+        new Chart(ctxtheia_measurements_startContributions, {
+            type: 'line',
+            data: {
+            datasets: [{
+                label: 'theia_measurements/startContributions',
+                data: [{"x":"2023-8-29T14-21-9","y":1426}]
+            }]
+            },
+            options: {
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            averageLine,
+                            stdDerivationUpper,
+                            stdDerivationLower
+                        }
+                    }
+                }
+            }
+        });
+        </script>
+        </div>
+         
+        <div class="chart">
+        <h2>theia_measurements/waitForDeployment</h2>
+        <canvas id="theia_measurements_waitForDeployment" style="width:100%;max-height: 500px;"></canvas>
+        <script>
+        const ctxtheia_measurements_waitForDeployment = document.getElementById('theia_measurements_waitForDeployment');
+        new Chart(ctxtheia_measurements_waitForDeployment, {
+            type: 'line',
+            data: {
+            datasets: [{
+                label: 'theia_measurements/waitForDeployment',
+                data: [{"x":"2023-8-29T14-21-9","y":597.1000000000349}]
+            }]
+            },
+            options: {
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            averageLine,
+                            stdDerivationUpper,
+                            stdDerivationLower
+                        }
+                    }
+                }
+            }
+        });
+        </script>
+        </div>
+         
+        <div class="chart">
+        <h2>theia_measurements/revealShell</h2>
+        <canvas id="theia_measurements_revealShell" style="width:100%;max-height: 500px;"></canvas>
+        <script>
+        const ctxtheia_measurements_revealShell = document.getElementById('theia_measurements_revealShell');
+        new Chart(ctxtheia_measurements_revealShell, {
+            type: 'line',
+            data: {
+            datasets: [{
+                label: 'theia_measurements/revealShell',
+                data: [{"x":"2023-8-29T14-21-9","y":2532.7999999999884}]
+            }]
+            },
+            options: {
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            averageLine,
+                            stdDerivationUpper,
+                            stdDerivationLower
+                        }
+                    }
+                }
+            }
+        });
+        </script>
+        </div>
+         
+        <div class="chart">
+        <h2>theia_measurements/deployPlugins</h2>
+        <canvas id="theia_measurements_deployPlugins" style="width:100%;max-height: 500px;"></canvas>
+        <script>
+        const ctxtheia_measurements_deployPlugins = document.getElementById('theia_measurements_deployPlugins');
+        new Chart(ctxtheia_measurements_deployPlugins, {
+            type: 'line',
+            data: {
+            datasets: [{
+                label: 'theia_measurements/deployPlugins',
+                data: [{"x":"2023-8-29T14-21-9","y":136.17819599999348}]
+            }]
+            },
+            options: {
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            averageLine,
+                            stdDerivationUpper,
+                            stdDerivationLower
+                        }
+                    }
+                }
+            }
+        });
+        </script>
+        </div>
+         
+        <div class="chart">
+        <h2>theia_measurements/syncPlugins</h2>
+        <canvas id="theia_measurements_syncPlugins" style="width:100%;max-height: 500px;"></canvas>
+        <script>
+        const ctxtheia_measurements_syncPlugins = document.getElementById('theia_measurements_syncPlugins');
+        new Chart(ctxtheia_measurements_syncPlugins, {
+            type: 'line',
+            data: {
+            datasets: [{
+                label: 'theia_measurements/syncPlugins',
+                data: [{"x":"2023-8-29T14-21-9","y":1048.100000000035}]
+            }]
+            },
+            options: {
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            averageLine,
+                            stdDerivationUpper,
+                            stdDerivationLower
+                        }
+                    }
+                }
+            }
+        });
+        </script>
+        </div>
+         
+        <div class="chart">
+        <h2>theia_measurements/loadPlugins</h2>
+        <canvas id="theia_measurements_loadPlugins" style="width:100%;max-height: 500px;"></canvas>
+        <script>
+        const ctxtheia_measurements_loadPlugins = document.getElementById('theia_measurements_loadPlugins');
+        new Chart(ctxtheia_measurements_loadPlugins, {
+            type: 'line',
+            data: {
+            datasets: [{
+                label: 'theia_measurements/loadPlugins',
+                data: [{"x":"2023-8-29T14-21-9","y":849.3000000000466}]
+            }]
+            },
+            options: {
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            averageLine,
+                            stdDerivationUpper,
+                            stdDerivationLower
+                        }
+                    }
+                }
+            }
+        });
+        </script>
+        </div>
+         
+        <div class="chart">
+        <h2>theia_measurements/startPlugins</h2>
+        <canvas id="theia_measurements_startPlugins" style="width:100%;max-height: 500px;"></canvas>
+        <script>
+        const ctxtheia_measurements_startPlugins = document.getElementById('theia_measurements_startPlugins');
+        new Chart(ctxtheia_measurements_startPlugins, {
+            type: 'line',
+            data: {
+            datasets: [{
+                label: 'theia_measurements/startPlugins',
+                data: [{"x":"2023-8-29T14-21-9","y":2831.7000000000116}]
+            }]
+            },
+            options: {
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            averageLine,
+                            stdDerivationUpper,
+                            stdDerivationLower
+                        }
+                    }
+                }
+            }
+        });
+        </script>
+        </div>
+         
+        <div class="chart">
+        <h2>process_cpu_seconds_total</h2>
+        <canvas id="process_cpu_seconds_total" style="width:100%;max-height: 500px;"></canvas>
+        <script>
+        const ctxprocess_cpu_seconds_total = document.getElementById('process_cpu_seconds_total');
+        new Chart(ctxprocess_cpu_seconds_total, {
+            type: 'line',
+            data: {
+            datasets: [{
+                label: 'process_cpu_seconds_total',
+                data: [{"x":"2023-8-29T14-21-9","y":1.4798429999999998}]
+            }]
+            },
+            options: {
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            averageLine,
+                            stdDerivationUpper,
+                            stdDerivationLower
+                        }
+                    }
+                }
+            }
+        });
+        </script>
+        </div>
+         
+        <div class="chart">
+        <h2>playwright_total_time</h2>
+        <canvas id="playwright_total_time" style="width:100%;max-height: 500px;"></canvas>
+        <script>
+        const ctxplaywright_total_time = document.getElementById('playwright_total_time');
+        new Chart(ctxplaywright_total_time, {
+            type: 'line',
+            data: {
+            datasets: [{
+                label: 'playwright_total_time',
+                data: [{"x":"2023-8-29T14-21-9","y":11972.756999999983}]
+            }]
+            },
+            options: {
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            averageLine,
+                            stdDerivationUpper,
+                            stdDerivationLower
+                        }
+                    }
+                }
+            }
+        });
+        </script>
+        </div>
+        
+        </div>    
+        </script>
+        </body>
+        </html>
+    
