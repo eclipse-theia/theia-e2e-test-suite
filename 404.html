@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    // Function to parse the URL path and determine the redirection
+    function redirectToAppropriatePage() {
+      var path = window.location.pathname;
+      if (path === '/') {
+        // Redirect to the allure index.html
+        window.location.href = '/allure/index.html';
+      } else if (path === '/performance') {
+        // Redirect to the performance index.html
+        window.location.href = '/performance/index.html';
+      } else {
+        // Handle other paths or show an error message
+        document.body.innerHTML = 'Page not found.';
+      }
+    }
+
+    // Call the redirection function when the page loads
+    window.onload = redirectToAppropriatePage;
+  </script>
+</head>
+<body>
+</body>
+</html>
