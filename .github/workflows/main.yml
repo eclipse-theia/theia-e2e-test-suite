@@ -82,6 +82,7 @@ jobs:
           #allure_report: allure-report
           allure_history: allure-history
           keep_reports: 100
+          subfolder: allure
 
       - name: Publish Report
         if: always() && github.ref == 'refs/heads/main'
