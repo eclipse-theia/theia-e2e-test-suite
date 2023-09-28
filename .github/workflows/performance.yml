@@ -36,18 +36,27 @@ jobs:
         with:
           repository: eclipse-theia/theia
           path: ./theia
-
+      - name: Copy webpack config
+        shell: bash
+        run: |
+          cp -f ./configs/theia.production.webpack.config.js ./theia/examples/browser/webpack.config.js
       - name: Build Theia
         shell: bash
         working-directory: ./theia
         run: |
           yarn --skip-integrity-check --network-timeout 100000
           yarn download:plugins
-          yarn browser build
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
-
+      - name: Build Browser App (Production)
+        shell: bash
+        working-directory: ./theia/examples/browser
+        run: |
+          yarn -s compile && yarn rebuild && yarn theia build --mode=production
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
       - name: Run Theia
         shell: bash
         working-directory: ./theia
