@@ -102,6 +102,14 @@ export async function generatePerformanceReport(path: string) {
         'process_cpu_seconds_total',
         'playwright_total_time'
     ]);
+
+    // TODO Post process values:
+    // if label ends with _X
+    //  take current as label
+    //  collect all values until X of _X is smaller than previous or doesn't exist
+    //  replace collected with one that has a computed average and best of 1ß value of collected
+    // else: set current value as average and best of 10
+
     const charts: string[] = [];
     for (const [valueLabel, valueHistory] of values) {
         const data = valueHistory.history.map(entry => ({ x: entry.entryLabel, y: entry.value }));

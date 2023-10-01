@@ -42,7 +42,8 @@ export async function fetchPerformanceMetrics({
     const dateString = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
     const timeString = `${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}`;
     const timestamp = `${dateString}T${timeString}`;
-    const fileName = outputFileNamePrefix + timestamp + outputFileNamePostfix;
+    const runNo = process.env.RUN_NO ? `_${process.env.RUN_NO}` : '';
+    const fileName = outputFileNamePrefix + timestamp + runNo + outputFileNamePostfix;
     const targetFile = `${outputFilePath}/${fileName}`;
 
     fs.ensureDirSync(outputFilePath);
