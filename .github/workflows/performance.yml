@@ -86,6 +86,11 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.x"
+      - name: Get History
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
       - name: Run Theia (#${{ matrix.run }})
         shell: bash
         working-directory: ./theia
@@ -96,12 +101,11 @@ jobs:
           RUN_NO: ${{ matrix.run }}
         with:
           run: yarn performance
-      # - name: Cache Performance Measurement (#${{ matrix.run }})
-      #   uses: actions/cache@v3
-      #   id: performance-measurement-${{ matrix.run }}
-      #   with:
-      #     path: ./performance-metrics
-      #     key: ${{ github.run_number }}-${{ matrix.run }}
+      - name: Upload performance measurement (#${{ matrix.run }})
+        uses: actions/upload-artifact@v3
+        with:
+          name: performance-measurement-${{ github.run_number }}
+          path: performance-metrics/*
 
   generate-report:
     name: Performance benchmark on ubuntu-latest with Node.js 16.x
@@ -115,89 +119,18 @@ jobs:
           path: ./*
           key: ${{ github.run_number }}
           fail-on-cache-miss: true
-      # ===============================================================================================
-      # START RESTORING PERFORMANCE MEASUREMENTS FROM CACHE
-      # we have to restore the performance measurement of each run individually
-      # so the following restore steps need to be aligned with the matrix.run variable in the job above
-      # - name: Restore Performance Measurement 0
-      #   uses: actions/cache/restore@v3
-      #   id: performance-measurement-0
-      #   with:
-      #     path: ./performance-metrics
-      #     key: ${{ github.run_number }}-0
-      #     fail-on-cache-miss: true
-      # - name: Restore Performance Measurement 1
-      #   uses: actions/cache/restore@v3
-      #   id: performance-measurement-1
-      #   with:
-      #     path: ./performance-metrics
-      #     key: ${{ github.run_number }}-1
-      #     fail-on-cache-miss: true
-      # - name: Restore Performance Measurement 2
-      #   uses: actions/cache/restore@v3
-      #   id: performance-measurement-2
-      #   with:
-      #     path: ./performance-metrics
-      #     key: ${{ github.run_number }}-2
-      #     fail-on-cache-miss: true
-      # - name: Restore Performance Measurement 3
-      #   uses: actions/cache/restore@v3
-      #   id: performance-measurement-3
-      #   with:
-      #     path: ./performance-metrics
-      #     key: ${{ github.run_number }}-3
-      #     fail-on-cache-miss: true
-      # - name: Restore Performance Measurement 4
-      #   uses: actions/cache/restore@v3
-      #   id: performance-measurement-4
-      #   with:
-      #     path: ./performance-metrics
-      #     key: ${{ github.run_number }}-4
-      #     fail-on-cache-miss: true
-      # - name: Restore Performance Measurement 5
-      #   uses: actions/cache/restore@v3
-      #   id: performance-measurement-5
-      #   with:
-      #     path: ./performance-metrics
-      #     key: ${{ github.run_number }}-5
-      #     fail-on-cache-miss: true
-      # - name: Restore Performance Measurement 6
-      #   uses: actions/cache/restore@v3
-      #   id: performance-measurement-6
-      #   with:
-      #     path: ./performance-metrics
-      #     key: ${{ github.run_number }}-6
-      #     fail-on-cache-miss: true
-      # - name: Restore Performance Measurement 7
-      #   uses: actions/cache/restore@v3
-      #   id: performance-measurement-7
-      #   with:
-      #     path: ./performance-metrics
-      #     key: ${{ github.run_number }}-7
-      #     fail-on-cache-miss: true
-      # - name: Restore Performance Measurement 8
-      #   uses: actions/cache/restore@v3
-      #   id: performance-measurement-8
-      #   with:
-      #     path: ./performance-metrics
-      #     key: ${{ github.run_number }}-8
-      #     fail-on-cache-miss: true
-      # - name: Restore Performance Measurement 9
-      #   uses: actions/cache/restore@v3
-      #   id: performance-measurement-9
-      #   with:
-      #     path: ./performance-metrics
-      #     key: ${{ github.run_number }}-9
-      #     fail-on-cache-miss: true
-      # END RESTORING PERFORMANCE MEASUREMENTS FROM CACHE
-      # ===============================================================================================
       - name: Get History
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         if: always() && github.ref == 'refs/heads/main'
         continue-on-error: true
         with:
           ref: gh-pages
           path: gh-pages
+      - name: Download Performance Measurements
+        uses: actions/download-artifact@v3
+        with:
+          name: performance-measurement-${{ github.run_number }}
+          path: performance-metrics
       - name: Prepare Report
         if: always() && github.ref == 'refs/heads/main'
         shell: bash
