@@ -294,7 +294,7 @@ export async function readEntries(path: string, values: string[]): Promise<{ val
  * 
  * @param values raw values as read from performance metrics files (key is the label of the value, value is the history of values),
  *               whereas the ValueHistory.history` of each entry must be sorted ascending by date and run.
- * @returns post processed values with the averages and best of ten values of multiple runs.
+ * @returns post processed values with the average values and best of ten values of multiple runs.
  */
 export function processValues(values: Map<string, ValueHistory>): Map<string, ValueHistory> {
     const processedValues = new Map<string, ValueHistory>();
@@ -356,6 +356,11 @@ function toCombinedValueHistoryEntry(entries: ValueHistoryEntry[]): ValueHistory
 }
 
 function averageValue(values: number[]): number {
+    if (values.length > 1) {
+        // remove worst outlier
+        values = values.sort();
+        values.pop();
+    }
     return values.reduce((a, b) => a + b, 0) / values.length;
 }
 
