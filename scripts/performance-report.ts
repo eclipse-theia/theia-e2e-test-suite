@@ -19,6 +19,8 @@ import * as fs from 'fs-extra';
 import * as readline from 'readline';
 import yargs from 'yargs';
 
+const matchUntilUnderscoreOrDot = /^([^\.\_])+/;
+
 (async () => {
     const options: PerformanceReportParams = yargs(process.argv)
         .option('ghPagesPath', {
@@ -66,8 +68,9 @@ export async function preparePerformanceReport({
     console.log('Copying history');
     fs.emptyDirSync(publishPath);
     fs.copySync(ghPagesPath, publishPath, { filter: (src, dest) => !src.includes('.git') });
-    // copy latest performance metrics into performance publish path
+    // harmonize file names and copy latest performance metrics into performance publish path
     console.log('Copying performance metrics');
+    harmonizeFileNames(performanceMetricsPath);
     fs.ensureDirSync(`${publishPath}/${performancePublishPath}`);
     fs.copySync(performanceMetricsPath, `${publishPath}/${performancePublishPath}`);
     // generate performance report
@@ -75,9 +78,35 @@ export async function preparePerformanceReport({
     generatePerformanceReport(`${publishPath}/${performancePublishPath}`);
 }
 
+/**
+ * We expect all files in this path to be measurements of the same job but from different runs.
+ * Thus they may have slightly different timestamps. In order to have a consistent dataset,
+ * we harmonize the timestamp of their file names and just distinguish them by their run number.
+ * @param path Path to the performance metrics files.
+ */
+function harmonizeFileNames(path: string) {
+    const files = fs.readdirSync(path).sort(sortByDateAndRunNumber);
+    if (files.length <= 1) {
+        return;
+    }
+    let referenceFileName = files.find(f => f.match(matchUntilUnderscoreOrDot))?.match(matchUntilUnderscoreOrDot);
+    if (!referenceFileName || referenceFileName.length < 1) {
+        return;
+    }
+    for (const file of files) {
+        const fileNameWithoutExtension = file.substring(0, file.lastIndexOf('.'));
+        const runNumber = getRunNumber(fileNameWithoutExtension);
+        if (runNumber >= 0) {
+            fs.renameSync(`${path}/${file}`, `${path}/${referenceFileName[0]}_${runNumber}.txt`);
+        }
+    }
+}
+
 interface ValueHistoryEntry {
     entryLabel: string;
     value: number;
+    best?: number;
+    combinesRuns?: string[];
 }
 interface ValueHistory {
     valueLabel: string;
@@ -102,9 +131,13 @@ export async function generatePerformanceReport(path: string) {
         'process_cpu_seconds_total',
         'playwright_total_time'
     ]);
+
+    const processedValues = processValues(values);
+
     const charts: string[] = [];
-    for (const [valueLabel, valueHistory] of values) {
+    for (const [valueLabel, valueHistory] of processedValues) {
         const data = valueHistory.history.map(entry => ({ x: entry.entryLabel, y: entry.value }));
+        const best = valueHistory.history.map(entry => ({ x: entry.entryLabel, y: entry.best ?? entry.value }));
         const valueId = valueLabel.replace('/', '_');
         charts.push(`
         <div class="chart">
@@ -115,21 +148,16 @@ export async function generatePerformanceReport(path: string) {
         new Chart(ctx${valueId}, {
             type: 'line',
             data: {
-            datasets: [{
-                label: '${valueLabel}',
-                data: ${JSON.stringify(data)}
-            }]
-            },
-            options: {
-                plugins: {
-                    annotation: {
-                        annotations: {
-                            averageLine,
-                            stdDerivationUpper,
-                            stdDerivationLower
-                        }
-                    }
-                }
+                datasets: [
+                    {
+                        label: '${valueLabel} (average of 10 runs)',
+                        data: ${JSON.stringify(data)}
+                    },
+                    {
+                        label: '${valueLabel} (best of 10 runs)',
+                        data: ${JSON.stringify(best)}
+                    },
+                ]
             }
         });
         </script>
@@ -147,74 +175,6 @@ export async function generatePerformanceReport(path: string) {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.3/chart.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.3/chart.umd.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
-        <script>
-            function lastN(values, n = 10) {
-                if (values.length > n) {
-                    return values.slice(-n);
-                }
-                return values;
-            }
-            function average10(ctx) {
-                let values = lastN(ctx.chart.data.datasets[0].data.map((entry) => entry.y));
-                return values.reduce((a, b) => a + b, 0) / values.length;
-            }
-            function standardDeviation10(ctx) {
-                const values = lastN(ctx.chart.data.datasets[0].data.map((entry) => entry.y));
-                const n = values.length;
-                const mean = average10(ctx);
-                return Math.sqrt(values.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n);
-            }
-            const averageLine = {
-                type: 'line',
-                borderColor: 'rgba(100, 149, 237, 0.5)',
-                borderDash: [6, 6],
-                borderDashOffset: 0,
-                borderWidth: 3,
-                label: {
-                    display: true,
-                    backgroundColor: 'rgba(100, 149, 237, 0.75)',
-                    content: (ctx) => 'Average(10): ' + average10(ctx).toFixed(2)
-                },
-                scaleID: 'y',
-                value: (ctx) => average10(ctx)
-            };
-            const stdDerivationUpper = {
-                type: 'line',
-                borderColor: 'rgba(102, 102, 102, 0.25)',
-                borderDash: [6, 6],
-                borderDashOffset: 0,
-                borderWidth: 3,
-                label: {
-                    display: true,
-                    backgroundColor: 'rgba(102, 102, 102, 0.5)',
-                    color: 'black',
-                    content: (ctx) => (average10(ctx) + standardDeviation10(ctx)).toFixed(2),
-                    position: 'start',
-                    rotation: -90,
-                    yAdjust: -28
-                },
-                scaleID: 'y',
-                value: (ctx) => average10(ctx) + standardDeviation10(ctx)
-            };
-            const stdDerivationLower = {
-                type: 'line',
-                borderColor: 'rgba(102, 102, 102, 0.25)',
-                borderDash: [6, 6],
-                borderDashOffset: 0,
-                borderWidth: 3,
-                label: {
-                    display: true,
-                    backgroundColor: 'rgba(102, 102, 102, 0.5)',
-                    color: 'black',
-                    content: (ctx) => (average10(ctx) - standardDeviation10(ctx)).toFixed(2),
-                    position: 'end',
-                    rotation: 90,
-                    yAdjust: 28
-                },
-                scaleID: 'y',
-                value: (ctx) => average10(ctx) - standardDeviation10(ctx)
-            };
-        </script>
         </head>
         
         <body>
@@ -232,9 +192,7 @@ export async function generatePerformanceReport(path: string) {
 
 export async function readValuesFromHistory(path: string, values: string[]): Promise<Map<string, ValueHistory>> {
     const valueHistoryMap = initializeValueHistoryMap(values);
-    const files = fs.readdirSync(path)
-        .filter(file => !file.endsWith('index.html'))
-        .sort((a, b) => toDate(a).getTime() - toDate(b).getTime());
+    const files = fs.readdirSync(path).filter(hasTxtExtension).sort(sortByDateAndRunNumber);
     for (const file of files) {
         const entryLabel = file.substring(0, file.indexOf('.'));
         const entries = await readEntries(path + '/' + file, values);
@@ -243,6 +201,27 @@ export async function readValuesFromHistory(path: string, values: string[]): Pro
         );
     }
     return valueHistoryMap;
+}
+
+export function hasTxtExtension(file: string): unknown {
+    return file.endsWith('.txt');
+}
+
+export function sortByDateAndRunNumber(a: string, b: string): number {
+    const runNumberA = extractRunNumber(a);
+    const runNumberB = extractRunNumber(b);
+    const dateStringA = extractDateString(a, runNumberA);
+    const dateStringB = extractDateString(b, runNumberB);
+    const dateComparison = toDate(dateStringA).getTime() - toDate(dateStringB).getTime();
+    return dateComparison !== 0 ? dateComparison : runNumberA - runNumberB;
+}
+
+export function extractRunNumber(fileName: string) {
+    return getRunNumber(fileName.replace('.txt', ''));
+}
+
+export function extractDateString(fileName: string, runNumber: number) {
+    return runNumber < 0 ? fileName : fileName.substring(0, fileName.indexOf(`_${runNumber}`));
 }
 
 export function initializeValueHistoryMap(values: string[]) {
@@ -292,4 +271,99 @@ export async function readEntries(path: string, values: string[]): Promise<{ val
         console.error(err);
     }
     return entries;
+}
+
+/**
+ * Post-processes the values read from the metrics files.
+ * 
+ * The input is a map of value labels (e.g. `'theia_measurements/frontend`) to the history of values for this label.
+ * Each history element has itself a label, which denotes the date and optionally the run, e.g. `2023-10-1T19-39-3_2`,
+ * whereas the measurement has been recorded on Oct 1st of 2023 at 19:39:03 in the second run (`_2`).
+ * 
+ * All runs for a single measurement will be combined into a single entry. Measurements that don't belong to a run will
+ * remain a single entry.
+ * The algorithm for combining multiple runs into a single entry is strongly based on the assumption that the
+ * list of `ValueHistoryEntry` instances is sorted by date so that multiple runs with the same date are occurring in a sequence.
+ * Otherwise this function may produce bogus.
+ * 
+ * This function walks through all value labels and each history element for that value label and applies the following:
+ * * If the entry represents the measurement of a single run (i.e. ends with `_X`) and has the same entry label as the previous entry, track it to be combined into one entry.
+ * * If the entry does not represent a single run (i.e. does not end with `_X`) or has a different entry label, conclude the previous collection and start a new one.
+ * Concluding the previous collection means computing the average and the best of ten value and putting it into a single `ValueHistoryEntry` that combines all runs of the current
+ * collection. The first element of the collection determines the label of the entire collection.
+ * 
+ * @param values raw values as read from performance metrics files (key is the label of the value, value is the history of values),
+ *               whereas the ValueHistory.history` of each entry must be sorted ascending by date and run.
+ * @returns post processed values with the average values and best of ten values of multiple runs.
+ */
+export function processValues(values: Map<string, ValueHistory>): Map<string, ValueHistory> {
+    const processedValues = new Map<string, ValueHistory>();
+    for (const [valueLabel, valueHistory] of values) {
+        const currentValueHistory = { valueLabel, history: new Array<ValueHistoryEntry>() }
+
+        let currentCollection: ValueHistoryEntry[] | undefined = undefined;
+        let previousEntryLabel: string | undefined = undefined;
+        for (const entry of valueHistory.history) {
+
+            const entryLabelMatchArray = entry.entryLabel.match(matchUntilUnderscoreOrDot);
+            const currentEntryLabel = entryLabelMatchArray ? entryLabelMatchArray[0] : undefined;
+            if (currentCollection && currentCollection.length > 0 && currentEntryLabel !== previousEntryLabel) {
+                // we have a collection and encountered a new entry label, so combine current collection into a single entry and reset
+                currentValueHistory.history.push(toCombinedValueHistoryEntry(currentCollection));
+                currentCollection = undefined;
+                previousEntryLabel = undefined;
+            }
+
+            if (currentCollection && currentEntryLabel === previousEntryLabel) {
+                // add to collection
+                currentCollection.push(entry);
+            } else {
+                // start new collection
+                currentCollection = [entry];
+            }
+
+            previousEntryLabel = currentEntryLabel;
+        }
+
+        // combine last collection if there still is one
+        if (currentCollection && currentCollection.length > 0) {
+            currentValueHistory.history.push(toCombinedValueHistoryEntry(currentCollection));
+        }
+
+        processedValues.set(valueLabel, currentValueHistory);
+    }
+    return processedValues;
+}
+
+function getRunNumber(label: string): number {
+    const match = label.match(/_([0-9]+)$/)
+    return match ? Number.parseInt(match[1]) : -1;
+}
+
+function toCombinedValueHistoryEntry(entries: ValueHistoryEntry[]): ValueHistoryEntry {
+    const values = entries.map(entry => entry.value);
+    const combinesRuns = entries.map(entry => entry.entryLabel);
+    const matchArray = combinesRuns[0].match(matchUntilUnderscoreOrDot);
+    const entryLabel = matchArray ? matchArray[0] + (entries.length > 1 ? '[]' : '') : combinesRuns[0];
+    const value = averageValue(values);
+    const best = bestValue(values);
+    return {
+        entryLabel,
+        value,
+        best,
+        combinesRuns
+    }
+}
+
+function averageValue(values: number[]): number {
+    if (values.length > 1) {
+        // remove worst outlier
+        values = values.sort();
+        values.pop();
+    }
+    return values.reduce((a, b) => a + b, 0) / values.length;
+}
+
+function bestValue(values: number[]): number {
+    return Math.min(...values);
 }
