@@ -2,9 +2,6 @@ name: Performance
 
 on:
   workflow_dispatch:
-  pull_request: # FIXME JUST FOR TESTING
-    branches:
-      - main
   schedule:
     - cron: "0 5 * * *" # Runs every day at 5am: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events-schedule
 
@@ -21,10 +18,10 @@ jobs:
         with:
           node-version: "16.x"
           registry-url: "https://registry.npmjs.org"
-      - name: Use Python 3.x
+      - name: Use Python 3.11
         uses: actions/setup-python@v4
         with:
-          python-version: "3.x"
+          python-version: "3.11"
       - name: Build
         shell: bash
         run: yarn
