@@ -158,6 +158,17 @@ export async function generatePerformanceReport(path: string) {
                         data: ${JSON.stringify(best)}
                     },
                 ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        type: 'logarithmic',
+                        ticks: {
+                            min: 1,
+                            max: 1000
+                        }
+                    }]
+                }
             }
         });
         </script>
