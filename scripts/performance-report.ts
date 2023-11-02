@@ -120,6 +120,8 @@ export async function generatePerformanceReport(path: string) {
     }
 
     const values = await readValuesFromHistory(path, [
+        'playwright_total_time',
+        'process_cpu_seconds_total',
         'theia_measurements/frontend',
         'theia_measurements/startContributions',
         'theia_measurements/waitForDeployment',
@@ -128,8 +130,7 @@ export async function generatePerformanceReport(path: string) {
         'theia_measurements/syncPlugins',
         'theia_measurements/loadPlugins',
         'theia_measurements/startPlugins',
-        'process_cpu_seconds_total',
-        'playwright_total_time'
+
     ]);
 
     const processedValues = processValues(values);
@@ -139,9 +140,10 @@ export async function generatePerformanceReport(path: string) {
         const data = valueHistory.history.map(entry => ({ x: entry.entryLabel, y: entry.value }));
         const best = valueHistory.history.map(entry => ({ x: entry.entryLabel, y: entry.best ?? entry.value }));
         const valueId = valueLabel.replace('/', '_');
+        const graphLabel = toGraphLablel(valueLabel);
         charts.push(`
         <div class="chart">
-        <h2>${valueLabel}</h2>
+        <h2>${graphLabel}</h2>
         <canvas id="${valueId}" style="width:100%;max-height: 500px;"></canvas>
         <script>
         const ctx${valueId} = document.getElementById('${valueId}');
@@ -150,14 +152,21 @@ export async function generatePerformanceReport(path: string) {
             data: {
                 datasets: [
                     {
-                        label: '${valueLabel} (average of 10 runs)',
+                        label: '${graphLabel} (average of 10 runs)',
                         data: ${JSON.stringify(data)}
                     },
                     {
-                        label: '${valueLabel} (best of 10 runs)',
+                        label: '${graphLabel} (best of 10 runs)',
                         data: ${JSON.stringify(best)}
                     },
                 ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        type: 'logarithmic'
+                    }]
+                }
             }
         });
         </script>
@@ -366,4 +375,31 @@ function averageValue(values: number[]): number {
 
 function bestValue(values: number[]): number {
     return Math.min(...values);
+}
+
+function toGraphLablel(originalLabel: string): string {
+    switch (originalLabel) {
+        case 'playwright_total_time':
+            return 'Playwright Total Time';
+        case 'process_cpu_seconds_total':
+            return 'Process Utilization (in seconds)';
+        case 'theia_measurements/frontend':
+            return 'Theia Frontend Startup Time';
+        case 'theia_measurements/startContributions':
+            return 'Time to start contributions (frontend)';
+        case 'theia_measurements/waitForDeployment':
+            return 'Time until plugins are deployed (frontend)';
+        case 'theia_measurements/revealShell':
+            return 'Time until shell is revealed (frontend)';
+        case 'theia_measurements/deployPlugins':
+            return 'Time to deploy plugins (backend)';
+        case 'theia_measurements/syncPlugins':
+            return 'Time to sync plugins (frontend)';
+        case 'theia_measurements/loadPlugins':
+            return 'Time to load plugins (frontend)';
+        case 'theia_measurements/startPlugins':
+            return 'Time to start plugins (frontend)';
+        default:
+            return originalLabel;
+    }
 }
