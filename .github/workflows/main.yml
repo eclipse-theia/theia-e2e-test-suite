@@ -42,6 +42,21 @@ jobs:
           repository: eclipse-theia/theia
           path: ./theia
 
+      - name: Theia dependencies
+        shell: bash
+        working-directory: ./theia
+        run: |
+          yarn --skip-integrity-check --network-timeout 100000
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
+
+      - name: Upload Theia build directory
+        uses: actions/upload-artifact@v2
+        with:
+          name: theia-directory
+          path: theia
+
   build_browser:
     name: Build Browser on ubuntu-latest with Node.js 16.x
     needs: [setup]
@@ -49,6 +64,12 @@ jobs:
     timeout-minutes: 60
 
     steps:
+      - name: Download Theia build directory
+        uses: actions/download-artifact@v2
+        with:
+          name: theia-directory
+          path: theia
+
       - name: Build Theia Browser
         shell: bash
         working-directory: ./theia
@@ -66,6 +87,12 @@ jobs:
     timeout-minutes: 60
 
     steps:
+      - name: Download Theia build directory
+        uses: actions/download-artifact@v2
+        with:
+          name: theia-directory
+          path: theia
+
       - name: Build Theia Electron
         shell: bash
         working-directory: ./theia
