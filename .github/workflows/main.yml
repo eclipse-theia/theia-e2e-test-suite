@@ -12,12 +12,10 @@ on:
     - cron: "0 4 * * *" # Runs every day at 4am: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events-schedule
 
 jobs:
-  build:
-    name: E2E Tests on ubuntu-latest with Node.js 16.x
-
+  setup:
+    name: Prepare environment on ubuntu-latest with Node.js 16.x
     runs-on: ubuntu-latest
     timeout-minutes: 60
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -44,7 +42,14 @@ jobs:
           repository: eclipse-theia/theia
           path: ./theia
 
-      - name: Build Theia
+  build_browser:
+    name: Build Browser on ubuntu-latest with Node.js 16.x
+    needs: [setup]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Build Theia Browser
         shell: bash
         working-directory: ./theia
         run: |
@@ -54,6 +59,30 @@ jobs:
           NODE_OPTIONS: --max_old_space_size=4096
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
 
+  build_electron:
+    name: Build Electron on ubuntu-latest with Node.js 16.x
+    needs: [setup]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Build Theia Electron
+        shell: bash
+        working-directory: ./theia
+        run: |
+          yarn --skip-integrity-check --network-timeout 100000
+          yarn electron build
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
+
+  test_browser:
+    name: E2E Browser Tests on ubuntu-latest with Node.js 16.x
+    needs: [build_browser]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
       - name: Run Theia
         shell: bash
         working-directory: ./theia
@@ -91,3 +120,43 @@ jobs:
           PERSONAL_TOKEN: ${{ secrets.TOKEN }}
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-history
+
+  test_electron:
+    name: E2E Electron Tests on ubuntu-latest with Node.js 16.x
+    needs: [build_electron]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Test (playwright)
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: yarn --cwd ./theia/examples/playwright ui-tests-electron
+
+      # - name: Get History
+      #   uses: actions/checkout@v2
+      #   if: always() && github.ref == 'refs/heads/main'
+      #   continue-on-error: true
+      #   with:
+      #     ref: gh-pages
+      #     path: gh-pages
+
+      # - name: Generate Report
+      #   uses: simple-elf/allure-report-action@master
+      #   if: always() && github.ref == 'refs/heads/main'
+      #   #id: allure-report
+      #   with:
+      #     allure_results: allure-results
+      #     #gh_pages: gh-pages
+      #     #allure_report: allure-report
+      #     allure_history: allure-history
+      #     keep_reports: 100
+      #     subfolder: allure
+
+      # - name: Publish Report
+      #   if: always() && github.ref == 'refs/heads/main'
+      #   uses: peaceiris/actions-gh-pages@v2
+      #   env:
+      #     PERSONAL_TOKEN: ${{ secrets.TOKEN }}
+      #     PUBLISH_BRANCH: gh-pages
+      #     PUBLISH_DIR: allure-history
