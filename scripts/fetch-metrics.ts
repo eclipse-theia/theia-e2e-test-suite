@@ -18,8 +18,8 @@ import { type FullConfig } from '@playwright/test';
 import * as fs from 'fs-extra';
 import fetch from 'node-fetch';
 
-async function fetchMetrics(config: FullConfig) {
-    await fetchPerformanceMetrics(config.metadata.performanceMetrics, config.metadata.totalTime);
+async function fetchMetrics(projectName: string, config: FullConfig) {
+    await fetchPerformanceMetrics(projectName, config.metadata.performanceMetrics, config.metadata.totalTime);
 }
 
 export default fetchMetrics;
@@ -31,13 +31,17 @@ export interface MetricsFetchConfig {
     outputFilePath: string;
 }
 
-export async function fetchPerformanceMetrics({
-    metricsEndpoint,
-    outputFileNamePrefix,
-    outputFileNamePostfix,
-    outputFilePath }: MetricsFetchConfig,
+export async function fetchPerformanceMetrics(
+    projectName: string,
+    {
+        metricsEndpoint,
+        outputFileNamePrefix,
+        outputFileNamePostfix,
+        outputFilePath
+    }: MetricsFetchConfig,
     totalTime?: string
 ) {
+    outputFilePath = `${outputFilePath}/${projectName}`;
     const now = new Date();
     const dateString = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
     const timeString = `${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}`;

@@ -13,19 +13,23 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { expect, Page, test } from '@playwright/test';
-import { TheiaApp } from '@theia/playwright';
+import { expect, test } from '@playwright/test';
+import { TheiaApp, TheiaAppLoader } from '@theia/playwright';
 
-let page: Page;
 let app: TheiaApp;
 
-test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage();
-    app = await TheiaApp.loadApp(page, TheiaApp);
+test.beforeAll(async ({ playwright, browser }) => {
+    app = await TheiaAppLoader.load({
+        playwright, useElectron: { electronAppPath: 'theia/examples/electron', }, browser
+    });
 });
 
-test.describe('Theia app', () => {
+test.afterAll(async () => {
+    await app.page.close();
+});
 
+
+test.describe('Theia app', () => {
     test('should show main content panel', async () => {
         expect(await app.isMainContentPanelVisible()).toBe(true);
     });
