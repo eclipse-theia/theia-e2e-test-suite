@@ -36,6 +36,14 @@ const config: PlaywrightTestConfig = {
     reporter: [
         ['list'],
         ['allure-playwright']
+    ],
+    projects: [
+        {
+            name: 'Browser',
+        },
+        {
+            name: 'Electron',
+        }
     ]
 };
 
