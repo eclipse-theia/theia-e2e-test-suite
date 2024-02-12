@@ -20,7 +20,6 @@ import { MetricsFetchConfig } from '../scripts/fetch-metrics';
 export default defineConfig({
     testDir: '../lib/tests',
     testMatch: ['**/*.performance.js'],
-    globalTeardown: require.resolve('../scripts/fetch-metrics.ts'),
     workers: 1,
     timeout: 60 * 1000,
     use: {
@@ -51,6 +50,9 @@ export default defineConfig({
                 ...devices['Desktop Chrome'],
                 channel: 'chrome'
             },
-        }
+        },
+        {
+            name: 'Electron',
+        },
     ]
 });

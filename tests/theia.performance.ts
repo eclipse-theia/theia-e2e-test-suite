@@ -15,14 +15,30 @@
 // *****************************************************************************
 
 import { expect, test } from '@playwright/test';
-import { TheiaApp, TheiaTextEditor, TheiaWorkspace } from '@theia/playwright';
+import { TheiaApp, TheiaAppLoader, TheiaTextEditor, TheiaWorkspace } from '@theia/playwright';
+import fetchMetrics from '../scripts/fetch-metrics';
+import { initializeExplorer } from './util';
+
+let app: TheiaApp;
+const electronAppPath = 'theia/examples/electron';
+const pluginsPath = 'theia/examples/plugins';
 
 test.describe('Theia App', () => {
 
-    test('should be fast in opening, changing and saving a text file', async ({ browser }) => {
-        const page = await browser.newPage();
+    test('should be fast in opening, changing and saving a text file', async ({ playwright, browser }) => {
         const ws = new TheiaWorkspace(['tests/resources/sample-files1']);
-        const app = await TheiaApp.loadApp(page, TheiaApp, ws);
+        app = await TheiaAppLoader.load({
+            playwright, useElectron: {
+                electronAppPath: electronAppPath,
+                launchOptions: {
+                    additionalArgs: ['--no-cluster', '--port=3000'],
+                    electronAppPath: electronAppPath,
+                    pluginsPath: pluginsPath
+                }
+            }, browser
+        }, ws);
+
+        await initializeExplorer(app);
         const textEditor = await app.openEditor('sample.txt', TheiaTextEditor);
 
         expect(await textEditor.isTabVisible()).toBe(true);
@@ -37,4 +53,9 @@ test.describe('Theia App', () => {
         await textEditor.close();
     });
 
+});
+
+test.afterAll(async ({ }, testInfo) => {
+    await fetchMetrics(testInfo.project.name, testInfo.config);
+    await app.page.close();
 });

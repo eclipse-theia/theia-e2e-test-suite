@@ -15,21 +15,31 @@
 // *****************************************************************************
 
 import { expect, test } from '@playwright/test';
-import { DefaultPreferences, PreferenceIds, TheiaApp, TheiaPreferenceView, TheiaTextEditor, TheiaWorkspace } from '@theia/playwright';
+import { DefaultPreferences, PreferenceIds, TheiaApp, TheiaAppLoader, TheiaPreferenceView, TheiaTextEditor, TheiaWorkspace } from '@theia/playwright';
+import { initializeExplorer } from './util';
 
 let textEditor: TheiaTextEditor;
+let app: TheiaApp;
 
-test.beforeAll(async ({ browser }) => {
-    const page = await browser.newPage();
+test.beforeAll(async ({ playwright, browser }) => {
     const ws = new TheiaWorkspace(['tests/resources/sample-files1']);
-    const app = await TheiaApp.loadApp(page, TheiaApp, ws);
+    app = await TheiaAppLoader.load({
+        playwright, useElectron: {
+            electronAppPath: 'theia/examples/electron'
+        }, browser
+    }, ws);
 
     // set auto-save preference to off
     const preferenceView = await app.openPreferences(TheiaPreferenceView);
     await preferenceView.setOptionsPreferenceById(PreferenceIds.Editor.AutoSave, DefaultPreferences.Editor.AutoSave.Off);
     await preferenceView.close();
 
+    await initializeExplorer(app);
     textEditor = await app.openEditor('sample.txt', TheiaTextEditor);
+});
+
+test.afterAll(async () => {
+    await app.page.close();
 });
 
 test.describe('Theia Text Editor', () => {
