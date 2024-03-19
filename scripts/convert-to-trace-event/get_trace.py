@@ -12,33 +12,66 @@ __copyright__ = """
 __license__ = "EPL-2.0"
 
 import re
-import requests
 import json
+import os
+import subprocess
+import shutil
+
 import tqdm
 
-prefix = "https://github.com/eclipse-theia/theia-e2e-test-suite/blob/gh-pages/"
-source_page = prefix + "performance"
-response = requests.get(source_page)
-if response.status_code != 200:
-    print(f"Error: {response.status_code}")
-    exit(0)
-data = json.loads(response.content)
-items = data['payload']['tree']['items']
-for item in tqdm.tqdm(items):
-    input_trace = prefix + item['path']
-    output_trace = item['name'] + '.json'
+REPO_URL = 'git@github.com:eclipse-theia/theia-e2e-test-suite.git'
+FOLDER_PATH = 'performance'  # Change this to the folder path you want to checkout
+BRANCH = 'gh-pages'  # Change this to the branch you want to checkout
+OUTPUT_FOLDER = 'traces'
+
+
+def is_git_installed():
+    try:
+        subprocess.run(['git', '--version'], stdout=subprocess.PIPE,
+                       stderr=subprocess.PIPE, check=True)
+        return True
+    except FileNotFoundError:
+        return False
+
+
+def checkout_files_from_github(repo_url, branch, folder_path):
+    if not is_git_installed():
+        print("Git is not installed. Please install Git and try again.")
+        return
+
+    # Clone the GitHub repository
+    subprocess.run(['git', 'clone', repo_url])
+
+    # Get the repository name from the URL
+    repo_name = repo_url.split('/')[-1].split('.')[0]
+
+    # Change directory to the cloned repository
+    os.chdir(repo_name)
+
+    subprocess.run(['git', 'checkout', branch])
+    # List all files in the specified folder
+    return repo_name, os.listdir(folder_path)
+
+
+repo_name, files = checkout_files_from_github(REPO_URL, BRANCH, FOLDER_PATH)
+if not os.path.exists(OUTPUT_FOLDER):
+    os.mkdir(OUTPUT_FOLDER)
+for file in tqdm.tqdm(files):
+    if file == 'index.html':
+        continue
+
+    input_trace = FOLDER_PATH + '/' + file
+    output_trace = '../'+OUTPUT_FOLDER + '/' + file[:-4] + '.json'
     # theia_measurements{id="backend", name="deployPlugin", startTime="943.3257030000095", owner="backend"} 1.7780040000216104
-    regex_pattern  = re.compile(r'(\S+)\{id="(\S+)", name="(\S+)", startTime="(\S+)", owner="(\S+)"\} (\S+)')
-    response = requests.get(input_trace)
-    if response.status_code == 200:
+    regex_pattern = re.compile(
+        r'(\S+)\{id="(\S+)", name="(\S+)", startTime="(\S+)", owner="(\S+)"\} (\S+)')
+    with open(input_trace, 'r', encoding='utf8') as content:
         last_name = None
         last_type = None
         last_label = None
         events = []
-        data = json.loads(response.content)
-        blob = data['payload']['blob']
-        for line in blob['rawLines']:
-            
+        for line in content.readlines():
+
             if line.startswith('# HELP'):
                 data = line.split(' ', 3)
                 last_name = data[1]
@@ -59,22 +92,22 @@ for item in tqdm.tqdm(items):
                         owner = groups.group(5)
                         duration = float(groups.group(6))
                         event = {}
-                        event['ts']=startTime*1000
-                        event['name']= name
-                        event['pid']=owner
+                        event['ts'] = startTime*1000
+                        event['name'] = name
+                        event['pid'] = owner
                         event['ph'] = 'B'
-                        event['args'] = {"msg": source_item, "id":unique_id}
+                        event['args'] = {"msg": source_item, "id": unique_id}
                         events.append(event)
                         event = {}
-                        event['ts']=(startTime+duration)*1000
-                        event['name']= name
-                        event['pid']=owner
+                        event['ts'] = (startTime+duration)*1000
+                        event['name'] = name
+                        event['pid'] = owner
                         event['ph'] = 'E'
-                        event['args'] = {"msg": source_item, "id":unique_id}
+                        event['args'] = {"msg": source_item, "id": unique_id}
                         events.append(event)
-        with open(output_trace, "w") as trace_file:
+        with open(output_trace, "w", encoding='utf8') as trace_file:
             # important to put the indent, multi-line json parses faster in trace compass
             trace_file.write(json.dumps(events, indent=1))
-    else:
-        print(f"Error: {response.status_code}")
+shutil.rmtree(repo_name)
+print(f'Completed, traces available in {OUTPUT_FOLDER}')
 
