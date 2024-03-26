@@ -73,7 +73,7 @@ jobs:
           path: gh-pages
 
       - name: Generate Report
-        uses: simple-elf/allure-report-action@master
+        uses: simple-elf/allure-report-action@v1.6
         if: always() && github.ref == 'refs/heads/main'
         #id: allure-report
         with:
