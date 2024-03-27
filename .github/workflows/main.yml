@@ -14,7 +14,6 @@ on:
 jobs:
   build:
     name: E2E Tests on ubuntu-latest with Node.js 16.x
-
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
@@ -50,19 +49,101 @@ jobs:
         run: |
           yarn --skip-integrity-check --network-timeout 100000
           yarn browser build
+          yarn electron build
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
+
+      - name: Cache Build Result
+        uses: actions/cache@v3
+        id: build-result
+        with:
+          path: ./*
+          key: ${{ github.run_number }}
+
+  browser-tests:
+    name: E2E Browser Tests on ubuntu-latest with Node.js 16.x
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: [build]
+
+    steps:
+      - name: Restore Build Result (#${{ github.run_number }})
+        uses: actions/cache/restore@v3
+        id: build-result
+        with:
+          path: ./*
+          key: ${{ github.run_number }}
+          fail-on-cache-miss: true
+
+      - name: Use Node.js "16.x"
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Use Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
       - name: Run Theia
         shell: bash
         working-directory: ./theia
         run: yarn browser start &
 
-      - name: Test (playwright)
-        uses: GabrielBB/xvfb-action@v1
+      - name: Test (playwright browser)
         with:
           run: yarn ui-tests-ci
+
+      - name: Upload test results (browser)
+        uses: actions/upload-artifact@v3
+        with:
+          name: ui-tests-browser-${{ github.run_number }}
+          path: allure_results/*
+
+  electron-tests:
+    name: E2E Electron Tests on ubuntu-latest with Node.js 16.x
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: [build]
+
+    steps:
+      - name: Restore Build Result (#${{ github.run_number }})
+        uses: actions/cache/restore@v3
+        id: build-result
+        with:
+          path: ./*
+          key: ${{ github.run_number }}
+          fail-on-cache-miss: true
+
+      - name: Use Node.js "16.x"
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Use Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Test (playwright electron)
+        with:
+          run: xvfb-run yarn ui-tests-ci-electron
+
+      - name: Upload test results (electron)
+        uses: actions/upload-artifact@v3
+        with:
+          name: ui-tests-electron-${{ github.run_number }}
+          path: allure_results/*
+
+  generate-report:
+    name: E2E Electron Tests on ubuntu-latest with Node.js 16.x
+    runs-on: ubuntu-latest
+    needs: [browser-tests, electron-tests]
+
+    steps:
 
       - name: Get History
         uses: actions/checkout@v2
@@ -71,6 +152,13 @@ jobs:
         with:
           ref: gh-pages
           path: gh-pages
+
+      - name: Download test results
+        uses: actions/download-artifact@v3
+        with:
+          path: ui-tests-*-${{ github.run_number }}
+          merge-multiple: true
+          path: allure_results
 
       - name: Generate Report
         uses: simple-elf/allure-report-action@master
