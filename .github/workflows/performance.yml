@@ -143,10 +143,10 @@ jobs:
           ref: gh-pages
           path: gh-pages
       - name: Run Performance Measurement / electron (#${{ matrix.run }})
+        shell: bash
+        run: xvfb-run yarn performance-on-electron
         env:
           RUN_NO: ${{ matrix.run }}
-        with:
-          run: xvfb-run yarn performance-on-electron
       - name: Upload performance measurement / electron (#${{ matrix.run }})
         uses: actions/upload-artifact@v3
         with:
