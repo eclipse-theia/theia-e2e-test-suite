@@ -97,7 +97,7 @@ jobs:
         run: yarn ui-tests-ci
 
       - name: Upload test results (browser)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ui-tests-browser-${{ github.run_number }}
           path: allure-results/*
@@ -133,7 +133,7 @@ jobs:
         run: xvfb-run yarn ui-tests-ci-electron
 
       - name: Upload test results (electron)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ui-tests-electron-${{ github.run_number }}
           path: allure-results/*
