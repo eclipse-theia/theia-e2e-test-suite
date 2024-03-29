@@ -152,12 +152,19 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-      - name: Download test results
+      - name: Download test results (Browser)
         uses: actions/download-artifact@v4
         with:
           path: allure-results
-          pattern: ui-tests-*-${{ github.run_number }}
-          merge-multiple: true
+          name: ui-tests-browser-${{ github.run_number }}
+      - name: Download test results (Electron)
+        uses: actions/download-artifact@v4
+        with:
+          path: allure-results
+          name: ui-tests-electron-${{ github.run_number }}
+
+      - name: Display structure of downloaded files
+        run: ls -R
 
       - name: Generate Report
         uses: simple-elf/allure-report-action@master
