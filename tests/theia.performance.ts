@@ -31,7 +31,7 @@ test.describe('Theia App', () => {
             playwright, useElectron: {
                 electronAppPath: electronAppPath,
                 launchOptions: {
-                    additionalArgs: ['--no-cluster', '--port=3000'],
+                    additionalArgs: ['--no-cluster', '--port=3000', '--log-level=debug'],
                     electronAppPath: electronAppPath,
                     pluginsPath: pluginsPath
                 }
@@ -56,6 +56,6 @@ test.describe('Theia App', () => {
 });
 
 test.afterAll(async ({ }, testInfo) => {
-    await fetchMetrics(testInfo.project.name, testInfo.config);
+    await fetchMetrics(testInfo.project.name, testInfo.config, testInfo.duration);
     await app.page.close();
 });

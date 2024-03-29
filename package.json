@@ -18,8 +18,8 @@
     "performance-on-chromium": "yarn && playwright test --config=./configs/performance.config.ts --project=Browser",
     "performance-on-electron": "yarn && USE_ELECTRON=true playwright test --config=./configs/performance.config.ts --project=Electron",
     "performance-report": "yarn run performance-report-chromium",
-    "performance-report-chromium": "yarn && node lib/scripts/performance-report.js --performanceMetricsPath performance-metrics/chromium --performancePublishPath=performance/chromium",
-    "performance-report-electron": "yarn && node lib/scripts/performance-report.js --performanceMetricsPath performance-metrics/electron --performancePublishPath=performance/electron"
+    "performance-report-chromium": "yarn && node lib/scripts/performance-report.js --performanceMetricsPath performance-metrics/Browser --performancePublishPath=performance/chromium",
+    "performance-report-electron": "yarn && node lib/scripts/performance-report.js --performanceMetricsPath performance-metrics/Electron --performancePublishPath=performance/electron"
   },
   "dependencies": {
     "@playwright/test": "^1.37.1",
