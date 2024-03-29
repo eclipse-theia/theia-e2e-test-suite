@@ -101,12 +101,12 @@ jobs:
         shell: bash
         working-directory: ./theia
         run: yarn browser start:debug &
-      - name: Run Performance Measurement: browser (#${{ matrix.run }})
+      - name: Run Performance Measurement / browser (#${{ matrix.run }})
         env:
           RUN_NO: ${{ matrix.run }}
         with:
           run: yarn performance
-      - name: Upload performance measurement: browser (#${{ matrix.run }})
+      - name: Upload performance measurement / browser (#${{ matrix.run }})
         uses: actions/upload-artifact@v3
         with:
           name: performance-measurement-browser-${{ github.run_number }}
@@ -142,19 +142,19 @@ jobs:
         with:
           ref: gh-pages
           path: gh-pages
-      - name: Run Performance Measurement: electron (#${{ matrix.run }})
+      - name: Run Performance Measurement / electron (#${{ matrix.run }})
         env:
           RUN_NO: ${{ matrix.run }}
         with:
           run: xvfb-run yarn performance-on-electron
-      - name: Upload performance measurement: electron (#${{ matrix.run }})
+      - name: Upload performance measurement / electron (#${{ matrix.run }})
         uses: actions/upload-artifact@v3
         with:
           name: performance-measurement-electron-${{ github.run_number }}
           path: performance-metrics/*
 
   generate-report:
-    name: Performance benchmark on ubuntu-latest with Node.js 16.x
+    name: Create Performance Report
     runs-on: ubuntu-latest
     needs: [run-browser-tests, run-electron-tests]
     steps:
