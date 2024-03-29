@@ -93,8 +93,8 @@ jobs:
         run: yarn browser start &
 
       - name: Test (playwright browser)
-        with:
-          run: yarn ui-tests-ci
+        shell: bash
+        run: yarn ui-tests-ci
 
       - name: Upload test results (browser)
         uses: actions/upload-artifact@v3
@@ -129,8 +129,8 @@ jobs:
           python-version: "3.11"
 
       - name: Test (playwright electron)
-        with:
-          run: xvfb-run yarn ui-tests-ci-electron
+        shell: bash
+        run: xvfb-run yarn ui-tests-ci-electron
 
       - name: Upload test results (electron)
         uses: actions/upload-artifact@v3
@@ -139,7 +139,7 @@ jobs:
           path: allure_results/*
 
   generate-report:
-    name: E2E Electron Tests on ubuntu-latest with Node.js 16.x
+    name: Generate Report of E2E Electron Tests
     runs-on: ubuntu-latest
     needs: [browser-tests, electron-tests]
 
@@ -156,7 +156,7 @@ jobs:
       - name: Download test results
         uses: actions/download-artifact@v3
         with:
-          path: ui-tests-*-${{ github.run_number }}
+          name: ui-tests-*-${{ github.run_number }}
           merge-multiple: true
           path: allure_results
 
