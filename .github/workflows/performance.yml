@@ -107,7 +107,7 @@ jobs:
         env:
           RUN_NO: ${{ matrix.run }}
       - name: Upload performance measurement / browser (#${{ matrix.run }})
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: performance-measurement-browser-${{ github.run_number }}
           path: performance-metrics/*
@@ -148,7 +148,7 @@ jobs:
         env:
           RUN_NO: ${{ matrix.run }}
       - name: Upload performance measurement / electron (#${{ matrix.run }})
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: performance-measurement-electron-${{ github.run_number }}
           path: performance-metrics/*
@@ -173,11 +173,11 @@ jobs:
           ref: gh-pages
           path: gh-pages
       - name: Download Performance Measurements
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           pattern: performance-measurement-*-${{ github.run_number }}
-          merge-multiple: true
           path: performance-metrics
+          merge-multiple: true
       - name: Prepare Browser Report
         if: always() && github.ref == 'refs/heads/main'
         shell: bash
