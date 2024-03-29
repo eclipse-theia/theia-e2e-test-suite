@@ -102,10 +102,10 @@ jobs:
         working-directory: ./theia
         run: yarn browser start:debug &
       - name: Run Performance Measurement / browser (#${{ matrix.run }})
+        shell: bash
+        run: yarn performance
         env:
           RUN_NO: ${{ matrix.run }}
-        with:
-          run: yarn performance
       - name: Upload performance measurement / browser (#${{ matrix.run }})
         uses: actions/upload-artifact@v3
         with:
