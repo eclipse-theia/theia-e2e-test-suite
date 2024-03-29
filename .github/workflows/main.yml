@@ -100,7 +100,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ui-tests-browser-${{ github.run_number }}
-          path: allure_results/*
+          path: allure-results/*
 
   electron-tests:
     name: E2E Electron Tests on ubuntu-latest with Node.js 16.x
@@ -136,7 +136,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ui-tests-electron-${{ github.run_number }}
-          path: allure_results/*
+          path: allure-results/*
 
   generate-report:
     name: Generate Report of E2E Electron Tests
@@ -144,7 +144,6 @@ jobs:
     needs: [browser-tests, electron-tests]
 
     steps:
-
       - name: Get History
         uses: actions/checkout@v2
         if: always() && github.ref == 'refs/heads/main'
@@ -163,11 +162,8 @@ jobs:
       - name: Generate Report
         uses: simple-elf/allure-report-action@master
         if: always() && github.ref == 'refs/heads/main'
-        #id: allure-report
         with:
           allure_results: allure-results
-          #gh_pages: gh-pages
-          #allure_report: allure-report
           allure_history: allure-history
           keep_reports: 100
           subfolder: allure
