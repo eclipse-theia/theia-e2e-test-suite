@@ -30,6 +30,11 @@ jobs:
         with:
           repository: eclipse-theia/theia
           path: ./theia
+      - name: Patch Theia to disable splash screen
+        shell: bash
+        working-directory: ./theia
+        run: |
+          sed -i '/"splashScreenOptions": {/,/}/c\          "splashScreenOptions": {}' examples/electron/package.json
       - name: Copy webpack config
         shell: bash
         run: |
