@@ -13,24 +13,24 @@ on:
 
 jobs:
   build:
-    name: E2E Tests on ubuntu-latest with Node.js 16.x
+    name: E2E Tests on ubuntu-latest with Node.js 18.x
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
 
-      - name: Use Node.js "16.x"
-        uses: actions/setup-node@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3.8.2
         with:
-          node-version: "16.x"
-          registry-url: "https://registry.npmjs.org"
+          node-version: 18.x
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Use Python 3.11
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa # v4.8.0
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
       - name: Build
         shell: bash
@@ -68,7 +68,7 @@ jobs:
           key: ${{ github.run_number }}
 
   browser-tests:
-    name: E2E Browser Tests on ubuntu-latest with Node.js 16.x
+    name: E2E Browser Tests on ubuntu-latest with Node.js 18.x
     runs-on: ubuntu-latest
     timeout-minutes: 60
     needs: [build]
@@ -82,16 +82,16 @@ jobs:
           key: ${{ github.run_number }}
           fail-on-cache-miss: true
 
-      - name: Use Node.js "16.x"
-        uses: actions/setup-node@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3.8.2
         with:
-          node-version: "16.x"
-          registry-url: "https://registry.npmjs.org"
+          node-version: 18.x
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Use Python 3.11
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa # v4.8.0
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
       - name: Run Theia
         shell: bash
@@ -109,7 +109,7 @@ jobs:
           path: allure-results/*
 
   electron-tests:
-    name: E2E Electron Tests on ubuntu-latest with Node.js 16.x
+    name: E2E Electron Tests on ubuntu-latest with Node.js 18.x
     runs-on: ubuntu-latest
     timeout-minutes: 60
     needs: [build]
@@ -123,16 +123,16 @@ jobs:
           key: ${{ github.run_number }}
           fail-on-cache-miss: true
 
-      - name: Use Node.js "16.x"
-        uses: actions/setup-node@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3.8.2
         with:
-          node-version: "16.x"
-          registry-url: "https://registry.npmjs.org"
+          node-version: 18.x
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Use Python 3.11
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa # v4.8.0
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
       - name: Test (playwright electron)
         shell: bash
