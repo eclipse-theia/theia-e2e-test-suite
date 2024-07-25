@@ -166,7 +166,7 @@ jobs:
           merge-multiple: true
 
       - name: Generate Report
-        uses: simple-elf/allure-report-action@master
+        uses: simple-elf/allure-report-action@58e6590adf6d8f196a0d771bf8a00e6921086a62 # v1.9
         if: always() && github.ref == 'refs/heads/main'
         with:
           allure_results: allure-results
