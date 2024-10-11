@@ -7,8 +7,8 @@ on:
 
 jobs:
   prepare:
-    name: Performance benchmark on ubuntu-latest with Node.js 20.x
-    runs-on: ubuntu-latest
+    name: Performance benchmark on ubuntu-22.04 with Node.js 20.x
+    runs-on: ubuntu-22.04
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -73,8 +73,8 @@ jobs:
           key: ${{ github.run_number }}
 
   run-browser-tests:
-    name: Performance browser benchmark on ubuntu-latest with Node.js 20.x
-    runs-on: ubuntu-latest
+    name: Performance browser benchmark on ubuntu-22.04 with Node.js 20.x
+    runs-on: ubuntu-22.04
     needs: [prepare]
     strategy:
       matrix:
@@ -118,8 +118,8 @@ jobs:
           path: performance-metrics/*
 
   run-electron-tests:
-    name: Performance electron benchmark on ubuntu-latest with Node.js 20.x
-    runs-on: ubuntu-latest
+    name: Performance electron benchmark on ubuntu-22.04 with Node.js 20.x
+    runs-on: ubuntu-22.04
     needs: [prepare]
     strategy:
       matrix:
@@ -160,7 +160,7 @@ jobs:
 
   generate-report:
     name: Create Performance Report
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [run-browser-tests, run-electron-tests]
     steps:
       - name: Restore Build Result
