@@ -13,8 +13,8 @@ on:
 
 jobs:
   build:
-    name: E2E Tests on ubuntu-latest with Node.js 20.x
-    runs-on: ubuntu-latest
+    name: E2E Tests on ubuntu-22.04 with Node.js 20.x
+    runs-on: ubuntu-22.04
     timeout-minutes: 60
 
     steps:
@@ -68,8 +68,8 @@ jobs:
           key: ${{ github.run_number }}
 
   browser-tests:
-    name: E2E Browser Tests on ubuntu-latest with Node.js 20.x
-    runs-on: ubuntu-latest
+    name: E2E Browser Tests on ubuntu-22.04 with Node.js 20.x
+    runs-on: ubuntu-22.04
     timeout-minutes: 60
     needs: [build]
 
@@ -109,8 +109,8 @@ jobs:
           path: allure-results/*
 
   electron-tests:
-    name: E2E Electron Tests on ubuntu-latest with Node.js 20.x
-    runs-on: ubuntu-latest
+    name: E2E Electron Tests on ubuntu-22.04 with Node.js 20.x
+    runs-on: ubuntu-22.04
     timeout-minutes: 60
     needs: [build]
 
@@ -146,7 +146,7 @@ jobs:
 
   generate-report:
     name: Generate Report of E2E Electron Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [browser-tests, electron-tests]
 
     steps:
