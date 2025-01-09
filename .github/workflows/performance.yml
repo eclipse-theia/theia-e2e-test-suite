@@ -70,7 +70,7 @@ jobs:
         uses: actions/cache@v3
         id: build-result
         with:
-          path: ./*
+          path: ./
           key: ${{ github.run_number }}
 
   run-browser-tests:
@@ -86,7 +86,7 @@ jobs:
         uses: actions/cache/restore@v3
         id: build-result
         with:
-          path: ./*
+          path: ./
           key: ${{ github.run_number }}
           fail-on-cache-miss: true
       - name: Use Node.js 20.x
@@ -131,7 +131,7 @@ jobs:
         uses: actions/cache/restore@v3
         id: build-result
         with:
-          path: ./*
+          path: ./
           key: ${{ github.run_number }}
           fail-on-cache-miss: true
       - name: Use Node.js 20.x
@@ -168,7 +168,7 @@ jobs:
         uses: actions/cache/restore@v3
         id: build-result
         with:
-          path: ./*
+          path: ./
           key: ${{ github.run_number }}
           fail-on-cache-miss: true
       - name: Get History
