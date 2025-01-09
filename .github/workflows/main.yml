@@ -53,9 +53,11 @@ jobs:
         shell: bash
         working-directory: ./theia
         run: |
-          yarn --skip-integrity-check --network-timeout 100000
-          yarn browser build
-          yarn electron build
+          npm install -g node-gyp
+          npm ci
+          npm run build
+          npm run build:browser
+          npm run build:electron
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
@@ -96,7 +98,7 @@ jobs:
       - name: Run Theia
         shell: bash
         working-directory: ./theia
-        run: yarn browser start &
+        run: npm run start:browser &
 
       - name: Test (playwright browser)
         shell: bash

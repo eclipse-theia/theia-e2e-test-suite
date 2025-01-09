@@ -44,8 +44,9 @@ jobs:
         shell: bash
         working-directory: ./theia
         run: |
-          yarn --skip-integrity-check --network-timeout 100000
-          yarn download:plugins --rate-limit 1
+          npm install -g node-gyp
+          npm ci
+          npm run download:plugins -- --rate-limit 1
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
@@ -53,7 +54,7 @@ jobs:
         shell: bash
         working-directory: ./theia/examples/browser
         run: |
-          yarn -s compile && yarn rebuild && yarn theia build --mode=production
+          npm run build:production
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
@@ -61,7 +62,7 @@ jobs:
         shell: bash
         working-directory: ./theia/examples/electron
         run: |
-          yarn -s compile && yarn rebuild && yarn theia build --mode=production
+          npm run build
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
@@ -105,7 +106,7 @@ jobs:
       - name: Run Theia browser backend (#${{ matrix.run }})
         shell: bash
         working-directory: ./theia
-        run: yarn browser start:debug &
+        run: npm run start:browser &
       - name: Run Performance Measurement / browser (#${{ matrix.run }})
         shell: bash
         run: yarn performance
