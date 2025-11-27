@@ -16,7 +16,6 @@
 
 import { type FullConfig } from '@playwright/test';
 import * as fs from 'fs-extra';
-import fetch from 'node-fetch';
 
 async function fetchMetrics(projectName: string, config: FullConfig, totalTime?: number) {
     await fetchPerformanceMetrics(projectName, config.metadata.performanceMetrics, totalTime);
