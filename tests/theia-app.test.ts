@@ -38,24 +38,33 @@ test.describe('Theia app', () => {
         expect(await app.statusBar.isVisible()).toBe(true);
     });
 
-    test('should close the quickCommandPalette when there are open notifications and escape is pressed', async () => {
-        const notifIndicator = new TheiaNotificationIndicator(app);
-        const notifOverlay = new TheiaNotificationOverlay(app, notifIndicator);
-        const commandPalette = new TheiaQuickCommandPalette(app);
+    test(
+        'should close the quickCommandPalette when there are open notifications and escape is pressed',
+        {
+            annotation: {
+                type: 'issue',
+                description: 'https://github.com/eclipse-theia/theia/issues/16660'
+            }
+        },
+        async () => {
+            const notifIndicator = new TheiaNotificationIndicator(app);
+            const notifOverlay = new TheiaNotificationOverlay(app, notifIndicator);
+            const commandPalette = new TheiaQuickCommandPalette(app);
 
-        // Preconditions: either has notifications open or the notification overlay is open
-        await notifOverlay.activate();
-        expect(await notifOverlay.isVisible()).toBe(true);
+            // Preconditions: either has notifications open or the notification overlay is open
+            await notifOverlay.activate();
+            expect(await notifOverlay.isVisible()).toBe(true);
 
-        // Open commandPalette and close it by pressing escape
-        await commandPalette.open();
-        expect(await commandPalette.isOpen()).toBe(true);
-        await app.page.keyboard.press('Escape');
+            // Open commandPalette and close it by pressing escape
+            await commandPalette.open();
+            expect(await commandPalette.isOpen()).toBe(true);
+            await app.page.keyboard.press('Escape');
 
-        // Expect commandPalette is closed and the notifications overlay stays open
-        expect(await commandPalette.isOpen()).toBe(false);
-        expect(await notifOverlay.isVisible()).toBe(true);
-    })
+            // Expect commandPalette is closed and the notifications overlay stays open
+            expect(await commandPalette.isOpen()).toBe(false);
+            expect(await notifOverlay.isVisible()).toBe(true);
+        }
+    );
 
     test('should have menu bar items', async () => {
         expect((await app.menuBar.visibleMenuBarItems()).length > 0).toBe(true);
