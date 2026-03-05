@@ -40,6 +40,7 @@ jobs:
         working-directory: ./theia
         run: |
           npm ci
+          npm run compile
           npm run download:plugins --rate-limit 1
         env:
           NODE_OPTIONS: --max_old_space_size=4096
