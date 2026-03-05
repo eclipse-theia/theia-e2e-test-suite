@@ -7,34 +7,29 @@ on:
 
 jobs:
   prepare:
-    name: Performance benchmark on ubuntu-22.04 with Node.js 20.x
+    name: Performance benchmark on ubuntu-22.04 with Node.js 22.x
     runs-on: ubuntu-22.04
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3.8.2
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version: 20.x
+          node-version: 22.x
           registry-url: 'https://registry.npmjs.org'
-      - name: Use Python 3.11
-        uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa # v4.8.0
+      - name: Use Python 3.13
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
-          python-version: '3.11'
+          python-version: '3.13'
       - name: Build
         shell: bash
-        run: yarn
+        run: npm ci
       - name: Checkout Theia
-        uses: actions/checkout@v3
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           repository: eclipse-theia/theia
           path: ./theia
-      - name: Patch Theia to disable splash screen
-        shell: bash
-        working-directory: ./theia
-        run: |
-          sed -i '/"splashScreenOptions": {/,/}/c\          "splashScreenOptions": {}' examples/electron/package.json
       - name: Copy webpack config
         shell: bash
         run: |
@@ -44,8 +39,8 @@ jobs:
         shell: bash
         working-directory: ./theia
         run: |
-          yarn --skip-integrity-check --network-timeout 100000
-          yarn download:plugins --rate-limit 1
+          npm ci
+          npm run download:plugins --rate-limit 1
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
@@ -53,7 +48,7 @@ jobs:
         shell: bash
         working-directory: ./theia/examples/browser
         run: |
-          yarn -s compile && yarn rebuild && yarn theia build --mode=production
+          npm run build:production
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
@@ -61,19 +56,19 @@ jobs:
         shell: bash
         working-directory: ./theia/examples/electron
         run: |
-          yarn -s compile && yarn rebuild && yarn theia build --mode=production
+          npm run build:production
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # https://github.com/microsoft/vscode-ripgrep/issues/9
       - name: Cache Build Result
-        uses: actions/cache@v3
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         id: build-result
         with:
           path: ./*
           key: ${{ github.run_number }}
 
   run-browser-tests:
-    name: Performance browser benchmark on ubuntu-22.04 with Node.js 20.x
+    name: Performance browser benchmark on ubuntu-22.04 with Node.js 22.x
     runs-on: ubuntu-22.04
     needs: [prepare]
     strategy:
@@ -82,43 +77,46 @@ jobs:
     timeout-minutes: 40
     steps:
       - name: Restore Build Result (#${{ matrix.run }})
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         id: build-result
         with:
           path: ./*
           key: ${{ github.run_number }}
           fail-on-cache-miss: true
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3.8.2
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version: 20.x
-          registry-url: 'https://registry.npmjs.org'
-      - name: Use Python 3.11
-        uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa # v4.8.0
+          node-version: 22.x
+          registry-url: "https://registry.npmjs.org"
+      - name: Use Python 3.13
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
-          python-version: '3.11'
+          python-version: "3.13"
+      - name: Install Playwright Chromium
+        shell: bash
+        run: npx playwright install chromium
       - name: Get History
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           ref: gh-pages
           path: gh-pages
       - name: Run Theia browser backend (#${{ matrix.run }})
         shell: bash
-        working-directory: ./theia
-        run: yarn browser start:debug &
+        working-directory: ./theia/examples/browser
+        run: npm run start:debug &
       - name: Run Performance Measurement / browser (#${{ matrix.run }})
         shell: bash
-        run: yarn performance
+        run: npm run performance
         env:
           RUN_NO: ${{ matrix.run }}
       - name: Upload performance measurement / browser (#${{ matrix.run }})
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: performance-measurement-browser-${{ github.run_number }}-${{ matrix.run }}
           path: performance-metrics/*
 
   run-electron-tests:
-    name: Performance electron benchmark on ubuntu-22.04 with Node.js 20.x
+    name: Performance electron benchmark on ubuntu-22.04 with Node.js 22.x
     runs-on: ubuntu-22.04
     needs: [prepare]
     strategy:
@@ -127,33 +125,43 @@ jobs:
     timeout-minutes: 40
     steps:
       - name: Restore Build Result (#${{ matrix.run }})
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         id: build-result
         with:
           path: ./*
           key: ${{ github.run_number }}
           fail-on-cache-miss: true
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3.8.2
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version: 20.x
-          registry-url: 'https://registry.npmjs.org'
-      - name: Use Python 3.11
-        uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa # v4.8.0
+          node-version: 22.x
+          registry-url: "https://registry.npmjs.org"
+      - name: Use Python 3.13
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
-          python-version: '3.11'
+          python-version: "3.13"
+      - name: Install Playwright Chromium
+        shell: bash
+        run: npx playwright install chromium
       - name: Get History
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           ref: gh-pages
           path: gh-pages
+      - name: Prepare Electron test config
+        shell: bash
+        run: |
+          mkdir -p /tmp/theia-test-config
+          echo '{ "security.workspace.trust.enabled": false }' > /tmp/theia-test-config/settings.json
       - name: Run Performance Measurement / electron (#${{ matrix.run }})
         shell: bash
-        run: xvfb-run yarn performance-on-electron
+        run: xvfb-run npm run performance-on-electron
         env:
           RUN_NO: ${{ matrix.run }}
+          NODE_PATH: ./theia/node_modules
+          THEIA_CONFIG_DIR: /tmp/theia-test-config
       - name: Upload performance measurement / electron (#${{ matrix.run }})
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: performance-measurement-electron-${{ github.run_number }}-${{ matrix.run }}
           path: performance-metrics/*
@@ -164,21 +172,21 @@ jobs:
     needs: [run-browser-tests, run-electron-tests]
     steps:
       - name: Restore Build Result
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         id: build-result
         with:
           path: ./*
           key: ${{ github.run_number }}
           fail-on-cache-miss: true
       - name: Get History
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         if: always() && github.ref == 'refs/heads/main'
         continue-on-error: true
         with:
           ref: gh-pages
           path: gh-pages
       - name: Download Performance Measurements
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@b14cf4c92620c250e1c074ab0a5800e37df86765 # v4.2.0
         with:
           pattern: performance-measurement-*-${{ github.run_number }}-*
           path: performance-metrics
@@ -186,15 +194,15 @@ jobs:
       - name: Prepare Browser Report
         if: always() && github.ref == 'refs/heads/main'
         shell: bash
-        run: yarn performance-report
+        run: npm run performance-report
       - name: Prepare Electron Report
         if: always() && github.ref == 'refs/heads/main'
         shell: bash
-        run: yarn performance-report-electron
+        run: npm run performance-report-electron
       - name: Publish Report
         if: always() && github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v2
-        env:
-          PERSONAL_TOKEN: ${{ secrets.TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: public
+        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
+        with:
+          personal_token: ${{ secrets.TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: public
