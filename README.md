@@ -17,7 +17,7 @@ The tests run periodically against Theia's `main` branch and is published to the
 
 ## Building
 
-Run `yarn` in the root directory of the repository.
+Run `npm install` in the root directory of the repository.
 
 ## Executing the tests
 
@@ -28,11 +28,11 @@ See [Theia's Quick Start guide](https://github.com/eclipse-theia/theia/blob/mast
 
 ### Running the tests headless
 
-To start the tests run `yarn ui-tests` in this directory.
+To start the tests run `npm run ui-tests` in this directory.
 This will start the tests in a headless execution mode.
 There is also a VS Code task available called `Run all tests`.
 
-To only run a single test file, the path of a test file can be set with `yarn ui-tests <path-to-file>` or `yarn ui-tests -g "<partial test file name>"`.
+To only run a single test file, the path of a test file can be set with `npm run ui-tests -- <path-to-file>` or `npm run ui-tests -- -g "<partial test file name>"`.
 Please note that you can't use the file extension `.ts` in the expression used in `<path-to-file>`.
 Either drop the file extension entirely, or use `.js` instead.
 See the [Playwright Test command line documentation](https://playwright.dev/docs/intro#command-line).

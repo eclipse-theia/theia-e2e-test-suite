@@ -17,7 +17,6 @@
 import { expect, test } from '@playwright/test';
 import { TheiaApp, TheiaAppLoader, TheiaTextEditor, TheiaWorkspace } from '@theia/playwright';
 import fetchMetrics from '../scripts/fetch-metrics';
-import { initializeExplorer } from './util';
 
 let app: TheiaApp;
 const electronAppPath = 'theia/examples/electron';
@@ -38,7 +37,6 @@ test.describe('Theia App', () => {
             }, browser
         }, ws);
 
-        await initializeExplorer(app);
         const textEditor = await app.openEditor('sample.txt', TheiaTextEditor);
 
         expect(await textEditor.isTabVisible()).toBe(true);

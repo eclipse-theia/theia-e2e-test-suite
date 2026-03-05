@@ -4,26 +4,26 @@
   "version": "1.46.1",
   "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
   "scripts": {
-    "prepare": "yarn clean && yarn build",
+    "prepare": "npm run clean && npm run build",
     "clean": "rimraf lib tsconfig.tsbuildinfo",
     "build": "tsc --incremental && if-env SKIP_CHROMIUM_INSTALLATION=1 && echo 'Skipping chromium install' || npx playwright install chromium",
-    "ui-tests": "yarn && playwright test --config=./configs/playwright.config.ts --project=Browser",
-    "ui-tests-electron": "yarn && USE_ELECTRON=true playwright test --config=./configs/playwright.config.ts --project=Electron",
-    "ui-tests-ci": "yarn && playwright test --config=./configs/playwright.ci.config.ts --project=Browser",
-    "ui-tests-ci-electron": "yarn && USE_ELECTRON=true playwright test --config=./configs/playwright.ci.config.ts --project=Electron",
-    "ui-tests-headful": "yarn && playwright test --config=./configs/playwright.headful.config.ts --project=Browser",
+    "ui-tests": "playwright test --config=./configs/playwright.config.ts --project=Browser",
+    "ui-tests-electron": "USE_ELECTRON=true playwright test --config=./configs/playwright.config.ts --project=Electron",
+    "ui-tests-ci": "playwright test --config=./configs/playwright.ci.config.ts --project=Browser",
+    "ui-tests-ci-electron": "USE_ELECTRON=true playwright test --config=./configs/playwright.ci.config.ts --project=Electron",
+    "ui-tests-headful": "playwright test --config=./configs/playwright.headful.config.ts --project=Browser",
     "ui-tests-report-generate": "allure generate ./allure-results --clean -o allure-results/allure-report",
-    "ui-tests-report": "yarn ui-tests-report-generate && allure open allure-results/allure-report",
-    "performance": "yarn run performance-on-chromium",
-    "performance-on-chromium": "yarn && playwright test --config=./configs/performance.config.ts --project=Browser",
-    "performance-on-electron": "yarn && USE_ELECTRON=true playwright test --config=./configs/performance.config.ts --project=Electron",
-    "performance-report": "yarn run performance-report-chromium",
-    "performance-report-chromium": "yarn && node lib/scripts/performance-report.js --performanceMetricsPath performance-metrics/Browser --performancePublishPath=performance/chromium",
-    "performance-report-electron": "yarn && node lib/scripts/performance-report.js --performanceMetricsPath performance-metrics/Electron --performancePublishPath=performance/electron"
+    "ui-tests-report": "npm run ui-tests-report-generate && allure open allure-results/allure-report",
+    "performance": "npm run performance-on-chromium",
+    "performance-on-chromium": "playwright test --config=./configs/performance.config.ts --project=Browser",
+    "performance-on-electron": "USE_ELECTRON=true playwright test --config=./configs/performance.config.ts --project=Electron",
+    "performance-report": "npm run performance-report-chromium",
+    "performance-report-chromium": "node lib/scripts/performance-report.js --performanceMetricsPath performance-metrics/Browser --performancePublishPath=performance/chromium",
+    "performance-report-electron": "node lib/scripts/performance-report.js --performanceMetricsPath performance-metrics/Electron --performancePublishPath=performance/electron"
   },
   "dependencies": {
-    "@playwright/test": "^1.37.1",
-    "@theia/playwright": "^1.46.1"
+    "@playwright/test": "^1.47.0",
+    "@theia/playwright": "^1.69.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.1",
@@ -34,8 +34,8 @@
     "fs-extra": "^11.1.1",
     "if-env": "^1.0.4",
     "node-fetch": "^2.6.7",
-    "rimraf": "^3.0.0",
-    "typescript": "~4.5.5",
+    "rimraf": "^5.0.0",
+    "typescript": "~5.6.0",
     "yargs": "^17.7.2"
   }
 }
