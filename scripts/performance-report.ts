@@ -43,6 +43,11 @@ const matchUntilUnderscoreOrDot = /^([^\.\_])+/;
             default: 'performance-metrics',
             type: 'string'
         })
+        .option('maxAgeDays', {
+            describe: 'Only include metrics from the last N days in the report. Use 0 for no limit.',
+            default: 90,
+            type: 'number'
+        })
         .parseSync();
     preparePerformanceReport(options);
 })();
@@ -56,26 +61,35 @@ interface PerformanceReportParams {
     performancePublishPath: string;
     /** The path where the latest performance metrics are located. */
     performanceMetricsPath: string;
+    /** Only include metrics from the last N days in the report. Use 0 for no limit. */
+    maxAgeDays: number;
 }
 
 export async function preparePerformanceReport({
     publishPath,
     ghPagesPath,
     performancePublishPath,
-    performanceMetricsPath
+    performanceMetricsPath,
+    maxAgeDays
 }: PerformanceReportParams) {
     // copy history from the current gh-pages folder to new publish path
     console.log('Copying history');
     fs.ensureDirSync(publishPath);
-    fs.copySync(ghPagesPath, publishPath, { filter: (src, dest) => !src.includes('.git') });
+    fs.copySync(ghPagesPath, publishPath, { overwrite: false, filter: (src, dest) => !src.includes('.git') });
     // harmonize file names and copy latest performance metrics into performance publish path
     console.log('Copying performance metrics');
     harmonizeFileNames(performanceMetricsPath);
-    fs.ensureDirSync(`${publishPath}/${performancePublishPath}`);
-    fs.copySync(performanceMetricsPath, `${publishPath}/${performancePublishPath}`);
-    // generate performance report
+    const fullPerformancePath = `${publishPath}/${performancePublishPath}`;
+    fs.ensureDirSync(fullPerformancePath);
+    fs.copySync(performanceMetricsPath, fullPerformancePath);
+    // archive old metrics
+    if (maxAgeDays > 0) {
+        console.log(`Archiving metrics older than ${maxAgeDays} days`);
+        archiveOldMetrics(fullPerformancePath, maxAgeDays);
+    }
+    // generate performance report from remaining (non-archived) files
     console.log('Generating performance report');
-    generatePerformanceReport(`${publishPath}/${performancePublishPath}`);
+    generatePerformanceReport(fullPerformancePath);
 }
 
 /**
@@ -98,6 +112,27 @@ function harmonizeFileNames(path: string) {
         const runNumber = getRunNumber(fileNameWithoutExtension);
         if (runNumber >= 0) {
             fs.renameSync(`${path}/${file}`, `${path}/${referenceFileName[0]}_${runNumber}.txt`);
+        }
+    }
+}
+
+/**
+ * Moves metric files older than `maxAgeDays` into an `archive/YYYY/` subdirectory.
+ * Archived files are preserved but excluded from the active report.
+ */
+function archiveOldMetrics(path: string, maxAgeDays: number) {
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - maxAgeDays);
+
+    const files = fs.readdirSync(path).filter(hasTxtExtension);
+    for (const file of files) {
+        const fileDate = toDate(file);
+        if (fileDate < cutoff) {
+            const year = fileDate.getFullYear();
+            const archiveDir = `${path}/archive/${year}`;
+            fs.ensureDirSync(archiveDir);
+            fs.moveSync(`${path}/${file}`, `${archiveDir}/${file}`, { overwrite: true });
+            console.log(`  Archived: ${file} -> archive/${year}/`);
         }
     }
 }
