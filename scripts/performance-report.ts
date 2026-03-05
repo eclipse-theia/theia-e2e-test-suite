@@ -43,8 +43,8 @@ const matchUntilUnderscoreOrDot = /^([^\.\_])+/;
             default: 'performance-metrics',
             type: 'string'
         })
-        .option('maxAgeDays', {
-            describe: 'Only include metrics from the last N days in the report. Use 0 for no limit.',
+        .option('maxReports', {
+            describe: 'Only keep the last N reports (by unique date) in the active report. Use 0 for no limit.',
             default: 90,
             type: 'number'
         })
@@ -61,8 +61,8 @@ interface PerformanceReportParams {
     performancePublishPath: string;
     /** The path where the latest performance metrics are located. */
     performanceMetricsPath: string;
-    /** Only include metrics from the last N days in the report. Use 0 for no limit. */
-    maxAgeDays: number;
+    /** Only keep the last N reports (by unique date) in the active report. Use 0 for no limit. */
+    maxReports: number;
 }
 
 export async function preparePerformanceReport({
@@ -70,7 +70,7 @@ export async function preparePerformanceReport({
     ghPagesPath,
     performancePublishPath,
     performanceMetricsPath,
-    maxAgeDays
+    maxReports
 }: PerformanceReportParams) {
     // copy history from the current gh-pages folder to new publish path
     console.log('Copying history');
@@ -83,9 +83,9 @@ export async function preparePerformanceReport({
     fs.ensureDirSync(fullPerformancePath);
     fs.copySync(performanceMetricsPath, fullPerformancePath);
     // archive old metrics
-    if (maxAgeDays > 0) {
-        console.log(`Archiving metrics older than ${maxAgeDays} days`);
-        archiveOldMetrics(fullPerformancePath, maxAgeDays);
+    if (maxReports > 0) {
+        console.log(`Archiving all but the last ${maxReports} reports`);
+        archiveOldReports(fullPerformancePath, maxReports);
     }
     // generate performance report from remaining (non-archived) files
     console.log('Generating performance report');
@@ -117,17 +117,26 @@ function harmonizeFileNames(path: string) {
 }
 
 /**
- * Moves metric files older than `maxAgeDays` into an `archive/YYYY/` subdirectory.
- * Archived files are preserved but excluded from the active report.
+ * Keeps only the last `maxReports` reports (by unique date) and archives the rest.
+ * Each report may consist of multiple run files (e.g. `2024-3-5T14-19-16_0.txt` through `_9.txt`).
  */
-function archiveOldMetrics(path: string, maxAgeDays: number) {
-    const cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - maxAgeDays);
-
-    const files = fs.readdirSync(path).filter(hasTxtExtension);
+function archiveOldReports(path: string, maxReports: number) {
+    const files = fs.readdirSync(path).filter(hasTxtExtension).sort(sortByDateAndRunNumber);
+    // Group files by their date (strip run number)
+    const reportDates = new Map<string, string[]>();
     for (const file of files) {
-        const fileDate = toDate(file);
-        if (fileDate < cutoff) {
+        const runNumber = extractRunNumber(file);
+        const dateKey = extractDateString(file, runNumber);
+        if (!reportDates.has(dateKey)) {
+            reportDates.set(dateKey, []);
+        }
+        reportDates.get(dateKey)!.push(file);
+    }
+    const sortedDates = [...reportDates.keys()].sort((a, b) => toDate(a).getTime() - toDate(b).getTime());
+    const datesToArchive = sortedDates.slice(0, Math.max(0, sortedDates.length - maxReports));
+    for (const dateKey of datesToArchive) {
+        for (const file of reportDates.get(dateKey)!) {
+            const fileDate = toDate(file);
             const year = fileDate.getFullYear();
             const archiveDir = `${path}/archive/${year}`;
             fs.ensureDirSync(archiveDir);
