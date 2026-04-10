@@ -35,6 +35,17 @@ jobs:
         run: |
           cp -f ./configs/theia.production.webpack.config.js ./theia/examples/browser/webpack.config.js
           cp -f ./configs/theia.production.webpack.config.js ./theia/examples/electron/webpack.config.js
+      - name: Disable workspace trust dialog in Theia Electron
+        shell: bash
+        working-directory: ./theia
+        run: |
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('examples/electron/package.json', 'utf8'));
+            if (!pkg.theia.frontend.config.preferences) { pkg.theia.frontend.config.preferences = {}; }
+            pkg.theia.frontend.config.preferences['security.workspace.trust.enabled'] = false;
+            fs.writeFileSync('examples/electron/package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
       - name: Build Theia
         shell: bash
         working-directory: ./theia
@@ -149,18 +160,12 @@ jobs:
         with:
           ref: gh-pages
           path: gh-pages
-      - name: Prepare Electron test config
-        shell: bash
-        run: |
-          mkdir -p /tmp/theia-test-config
-          echo '{ "security.workspace.trust.enabled": false }' > /tmp/theia-test-config/settings.json
       - name: Run Performance Measurement / electron (#${{ matrix.run }})
         shell: bash
         run: xvfb-run npm run performance-on-electron
         env:
           RUN_NO: ${{ matrix.run }}
           NODE_PATH: ./theia/node_modules
-          THEIA_CONFIG_DIR: /tmp/theia-test-config
       - name: Upload performance measurement / electron (#${{ matrix.run }})
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
