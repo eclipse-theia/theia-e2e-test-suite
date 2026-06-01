@@ -11,6 +11,10 @@ on:
   schedule:
     - cron: "0 4 * * *" # Runs every day at 4am: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events-schedule
 
+permissions:
+  pages: write
+  id-token: write
+
 jobs:
   build:
     name: E2E Tests on ubuntu-22.04 with Node.js 22.x
@@ -87,16 +91,28 @@ jobs:
           key: ${{ github.run_number }}
           fail-on-cache-miss: true
 
-      - name: Use Node.js 24.x
+      - name: Use Node.js "22.x"
         uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
-          node-version: 24.x
+          node-version: "22.x"
           registry-url: "https://registry.npmjs.org"
 
       - name: Use Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: "3.13"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          # Playwright's default install path on Linux. Keyed on the lockfile so the cache
+          # is reused as long as the @playwright/test version (and therefore the required
+          # Chromium build) does not change. After the first successful extraction the
+          # `playwright install` step becomes a no-op.
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
 
       - name: Install Playwright Chromium
         shell: bash
@@ -132,16 +148,28 @@ jobs:
           key: ${{ github.run_number }}
           fail-on-cache-miss: true
 
-      - name: Use Node.js 24.x
+      - name: Use Node.js "22.x"
         uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
-          node-version: 24.x
+          node-version: "22.x"
           registry-url: "https://registry.npmjs.org"
 
       - name: Use Python 3.13
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: "3.13"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          # Playwright's default install path on Linux. Keyed on the lockfile so the cache
+          # is reused as long as the @playwright/test version (and therefore the required
+          # Chromium build) does not change. After the first successful extraction the
+          # `playwright install` step becomes a no-op.
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
 
       - name: Install Playwright Chromium
         shell: bash
@@ -189,12 +217,18 @@ jobs:
           keep_reports: 100
           subfolder: allure
 
-      - name: Publish Report
+      - name: Upload Pages Artifact
         if: always() && github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
-          personal_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-history
-          user_name: "github-actions[bot]"
-          user_email: "41898282+github-actions[bot]@users.noreply.github.com"
+          path: allure-history
+
+  deploy-report:
+    name: Deploy Report to GitHub Pages
+    runs-on: ubuntu-22.04
+    needs: [generate-report]
+    if: always() && github.ref == 'refs/heads/main'
+    environment: github-pages
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
