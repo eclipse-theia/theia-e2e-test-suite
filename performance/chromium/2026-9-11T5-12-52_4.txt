@@ -1,0 +1,483 @@
+# HELP process_cpu_user_seconds_total Total user CPU time spent in seconds.
+# TYPE process_cpu_user_seconds_total counter
+process_cpu_user_seconds_total 1.0424 1789103573689
+
+# HELP process_cpu_system_seconds_total Total system CPU time spent in seconds.
+# TYPE process_cpu_system_seconds_total counter
+process_cpu_system_seconds_total 0.110125 1789103573689
+
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 1.152525 1789103573689
+
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1789103563
+
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes 314101760 1789103573690
+
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+process_virtual_memory_bytes 12585328640 1789103573690
+
+# HELP process_heap_bytes Process heap size in bytes.
+# TYPE process_heap_bytes gauge
+process_heap_bytes 473026560 1789103573690
+
+# HELP process_open_fds Number of open file descriptors.
+# TYPE process_open_fds gauge
+process_open_fds 48 1789103573690
+
+# HELP process_max_fds Maximum number of open file descriptors.
+# TYPE process_max_fds gauge
+process_max_fds 9223372036854776000
+
+# HELP nodejs_eventloop_lag_seconds Lag of event loop in seconds.
+# TYPE nodejs_eventloop_lag_seconds gauge
+nodejs_eventloop_lag_seconds 0.000505436 1789103573690
+
+# HELP nodejs_active_handles_total Number of active handles.
+# TYPE nodejs_active_handles_total gauge
+nodejs_active_handles_total 19 1789103573689
+
+# HELP nodejs_active_requests_total Number of active requests.
+# TYPE nodejs_active_requests_total gauge
+nodejs_active_requests_total 2 1789103573689
+
+# HELP nodejs_heap_size_total_bytes Process heap size from node.js in bytes.
+# TYPE nodejs_heap_size_total_bytes gauge
+nodejs_heap_size_total_bytes 130342912 1789103573689
+
+# HELP nodejs_heap_size_used_bytes Process heap size used from node.js in bytes.
+# TYPE nodejs_heap_size_used_bytes gauge
+nodejs_heap_size_used_bytes 83248632 1789103573689
+
+# HELP nodejs_external_memory_bytes Nodejs external memory size in bytes.
+# TYPE nodejs_external_memory_bytes gauge
+nodejs_external_memory_bytes 23982382 1789103573689
+
+# HELP nodejs_heap_space_size_total_bytes Process heap space size total from node.js in bytes.
+# TYPE nodejs_heap_space_size_total_bytes gauge
+nodejs_heap_space_size_total_bytes{space="read_only"} 0 1789103573689
+nodejs_heap_space_size_total_bytes{space="new"} 33554432 1789103573689
+nodejs_heap_space_size_total_bytes{space="old"} 69779456 1789103573689
+nodejs_heap_space_size_total_bytes{space="code"} 2621440 1789103573689
+nodejs_heap_space_size_total_bytes{space="shared"} 0 1789103573689
+nodejs_heap_space_size_total_bytes{space="trusted"} 5816320 1789103573689
+nodejs_heap_space_size_total_bytes{space="new_large_object"} 0 1789103573689
+nodejs_heap_space_size_total_bytes{space="large_object"} 18415616 1789103573689
+nodejs_heap_space_size_total_bytes{space="code_large_object"} 155648 1789103573689
+nodejs_heap_space_size_total_bytes{space="shared_large_object"} 0 1789103573689
+nodejs_heap_space_size_total_bytes{space="trusted_large_object"} 0 1789103573689
+
+# HELP nodejs_heap_space_size_used_bytes Process heap space size used from node.js in bytes.
+# TYPE nodejs_heap_space_size_used_bytes gauge
+nodejs_heap_space_size_used_bytes{space="read_only"} 0 1789103573689
+nodejs_heap_space_size_used_bytes{space="new"} 437760 1789103573689
+nodejs_heap_space_size_used_bytes{space="old"} 56460360 1789103573689
+nodejs_heap_space_size_used_bytes{space="code"} 2189056 1789103573689
+nodejs_heap_space_size_used_bytes{space="shared"} 0 1789103573689
+nodejs_heap_space_size_used_bytes{space="trusted"} 5647088 1789103573689
+nodejs_heap_space_size_used_bytes{space="new_large_object"} 0 1789103573689
+nodejs_heap_space_size_used_bytes{space="large_object"} 18384080 1789103573689
+nodejs_heap_space_size_used_bytes{space="code_large_object"} 138432 1789103573689
+nodejs_heap_space_size_used_bytes{space="shared_large_object"} 0 1789103573689
+nodejs_heap_space_size_used_bytes{space="trusted_large_object"} 0 1789103573689
+
+# HELP nodejs_heap_space_size_available_bytes Process heap space size available from node.js in bytes.
+# TYPE nodejs_heap_space_size_available_bytes gauge
+nodejs_heap_space_size_available_bytes{space="read_only"} 0 1789103573689
+nodejs_heap_space_size_available_bytes{space="new"} 16056832 1789103573689
+nodejs_heap_space_size_available_bytes{space="old"} 12069856 1789103573689
+nodejs_heap_space_size_available_bytes{space="code"} 268224 1789103573689
+nodejs_heap_space_size_available_bytes{space="shared"} 0 1789103573689
+nodejs_heap_space_size_available_bytes{space="trusted"} 67480 1789103573689
+nodejs_heap_space_size_available_bytes{space="new_large_object"} 16777216 1789103573689
+nodejs_heap_space_size_available_bytes{space="large_object"} 0 1789103573689
+nodejs_heap_space_size_available_bytes{space="code_large_object"} 0 1789103573689
+nodejs_heap_space_size_available_bytes{space="shared_large_object"} 0 1789103573689
+nodejs_heap_space_size_available_bytes{space="trusted_large_object"} 0 1789103573689
+
+# HELP nodejs_version_info Node.js version info.
+# TYPE nodejs_version_info gauge
+nodejs_version_info{version="v22.23.2",major="22",minor="23",patch="2"} 1
+
+# HELP theia_extension_version Theia extension version info.
+# TYPE theia_extension_version gauge
+theia_extension_version{extension="theia_electron",version="1.75.0"} 1
+theia_extension_version{extension="theia_core",version="1.75.0"} 1
+theia_extension_version{extension="theia_variable_resolver",version="1.75.0"} 1
+theia_extension_version{extension="theia_editor",version="1.75.0"} 1
+theia_extension_version{extension="theia_filesystem",version="1.75.0"} 1
+theia_extension_version{extension="theia_workspace",version="1.75.0"} 1
+theia_extension_version{extension="theia_markers",version="1.75.0"} 1
+theia_extension_version{extension="theia_outline_view",version="1.75.0"} 1
+theia_extension_version{extension="theia_monaco",version="1.75.0"} 1
+theia_extension_version{extension="theia_output",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_core",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_anthropic",version="1.75.0"} 1
+theia_extension_version{extension="theia_process",version="1.75.0"} 1
+theia_extension_version{extension="theia_file_search",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_chat",version="1.75.0"} 1
+theia_extension_version{extension="theia_navigator",version="1.75.0"} 1
+theia_extension_version{extension="theia_editor_preview",version="1.75.0"} 1
+theia_extension_version{extension="theia_userstorage",version="1.75.0"} 1
+theia_extension_version{extension="theia_preferences",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_chat_ui",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_claude_code",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_code_completion",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_openai",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_codex",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_copilot",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_core_ui",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_editor",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_google",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_history",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_huggingface",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_mcp",version="1.75.0"} 1
+theia_extension_version{extension="theia_terminal",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_terminal",version="1.75.0"} 1
+theia_extension_version{extension="theia_console",version="1.75.0"} 1
+theia_extension_version{extension="theia_task",version="1.75.0"} 1
+theia_extension_version{extension="theia_test",version="1.75.0"} 1
+theia_extension_version{extension="theia_debug",version="1.75.0"} 1
+theia_extension_version{extension="theia_scm",version="1.75.0"} 1
+theia_extension_version{extension="theia_search_in_workspace",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_ide",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_llamafile",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_mcp_server",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_mcp_ui",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_ollama",version="1.75.0"} 1
+theia_extension_version{extension="theia_bulk_edit",version="1.75.0"} 1
+theia_extension_version{extension="theia_callhierarchy",version="1.75.0"} 1
+theia_extension_version{extension="theia_messages",version="1.75.0"} 1
+theia_extension_version{extension="theia_notebook",version="1.75.0"} 1
+theia_extension_version{extension="theia_timeline",version="1.75.0"} 1
+theia_extension_version{extension="theia_typehierarchy",version="1.75.0"} 1
+theia_extension_version{extension="theia_plugin_ext",version="1.75.0"} 1
+theia_extension_version{extension="theia_plugin_ext_vscode",version="1.75.0"} 1
+theia_extension_version{extension="theia_vsx_registry",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_registry",version="1.75.0"} 1
+theia_extension_version{extension="theia_scanoss",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_scanoss",version="1.75.0"} 1
+theia_extension_version{extension="theia_ai_tool_sketchpad",version="1.75.0"} 1
+theia_extension_version{extension="theia_plugin_ext_headless",version="1.75.0"} 1
+theia_extension_version{extension="theia_api_provider_sample",version="1.75.0"} 1
+theia_extension_version{extension="theia_telemetry",version="1.75.0"} 1
+theia_extension_version{extension="theia_toolbar",version="1.75.0"} 1
+theia_extension_version{extension="theia_api_samples",version="1.75.0"} 1
+theia_extension_version{extension="theia_collaboration",version="1.75.0"} 1
+theia_extension_version{extension="theia_remote",version="1.75.0"} 1
+theia_extension_version{extension="theia_dev_container",version="1.75.0"} 1
+theia_extension_version{extension="theia_keymaps",version="1.75.0"} 1
+theia_extension_version{extension="theia_getting_started",version="1.75.0"} 1
+theia_extension_version{extension="theia_memory_inspector",version="1.75.0"} 1
+theia_extension_version{extension="theia_metrics",version="1.75.0"} 1
+theia_extension_version{extension="theia_mini_browser",version="1.75.0"} 1
+theia_extension_version{extension="theia_plugin_dev",version="1.75.0"} 1
+theia_extension_version{extension="theia_plugin_metrics",version="1.75.0"} 1
+theia_extension_version{extension="theia_property_view",version="1.75.0"} 1
+theia_extension_version{extension="theia_secondary_window",version="1.75.0"} 1
+theia_extension_version{extension="theia_terminal_manager",version="1.75.0"} 1
+
+# HELP theia_measurements Theia stopwatch measurement results.
+# TYPE theia_measurements gauge
+theia_measurements{id="backend", name="lR.initialize", startTime="691.762737", owner="backend process"} 86.01326099999994
+theia_measurements{id="backend", name="Object.initialize", startTime="693.224047", owner="backend process"} 84.637744
+theia_measurements{id="backend", name="E$.initialize", startTime="776.899528", owner="backend process"} 0.970593000000008
+theia_measurements{id="backend", name="s1e.initialize", startTime="777.045239", owner="backend process"} 0.8376449999999522
+theia_measurements{id="backend", name="Knt.initialize", startTime="777.192348", owner="backend process"} 0.6961039999999912
+theia_measurements{id="backend", name="xj.initialize", startTime="777.237299", owner="backend process"} 0.717049999999972
+theia_measurements{id="backend", name="Ddt.initialize", startTime="777.271536", owner="backend process"} 0.6915079999999989
+theia_measurements{id="backend", name="XBe.initialize", startTime="777.298015", owner="backend process"} 0.6720970000000079
+theia_measurements{id="backend", name="Jnt.initialize", startTime="693.289225", owner="backend process"} 93.60726599999998
+theia_measurements{id="backend", name="Object.configure", startTime="794.025977", owner="backend process"} 4.950934999999959
+theia_measurements{id="backend", name="S9.configure", startTime="794.225236", owner="backend process"} 4.813889000000017
+theia_measurements{id="backend", name="B$e.configure", startTime="794.377339", owner="backend process"} 4.6668580000000475
+theia_measurements{id="backend", name="zj.configure", startTime="798.33028", owner="backend process"} 0.7294160000000147
+theia_measurements{id="backend", name="Ane.configure", startTime="798.591979", owner="backend process"} 0.4705299999999397
+theia_measurements{id="backend", name="TBe.configure", startTime="798.691894", owner="backend process"} 0.3724320000000034
+theia_measurements{id="backend", name="swr.configure", startTime="798.799505", owner="backend process"} 0.2660640000000285
+theia_measurements{id="backend", name="VBe.configure", startTime="798.818702", owner="backend process"} 0.28165100000001075
+theia_measurements{id="backend", name="Ope.configure", startTime="794.151868", owner="backend process"} 5.4147369999999455
+theia_measurements{id="backend", name="Zre.configure", startTime="794.399802", owner="backend process"} 5.442853000000014
+theia_measurements{id="backend", name="l$.onStart", startTime="803.626178", owner="backend process"} 0.8211720000000469
+theia_measurements{id="backend", name="qL.onStart", startTime="804.563927", owner="backend process"} 3.6712269999999307
+theia_measurements{id="backend", name="ove.onStart", startTime="808.26469", owner="backend process"} 0.4137160000000222
+theia_measurements{id="backend", name="k1e.onStart", startTime="808.753583", owner="backend process"} 0.11268799999993462
+theia_measurements{id="backend", name=".onStart", startTime="808.919915", owner="backend process"} 1.9137110000000348
+theia_measurements{id="backend", name="idt.onStart", startTime="810.922341", owner="backend process"} 0.037418000000002394
+theia_measurements{id="backend", name="TBe.onStart", startTime="811.003756", owner="backend process"} 2.916686000000027
+theia_measurements{id="backend", name="swr.onStart", startTime="813.936957", owner="backend process"} 1.8994020000000091
+theia_measurements{id="backend", name="Bse.onStart", startTime="815.910043", owner="backend process"} 1.2532879999999977
+theia_measurements{id="backend", name="VBe.onStart", startTime="817.237674", owner="backend process"} 0.23805400000003374
+theia_measurements{id="backend", name="backend-startup", startTime="800.051978", owner="backend process"} 17.509680000000003
+theia_measurements{id="backend", name="backend-all-settled", startTime="683.31455", owner="backend process"} 134.2778219999999
+theia_measurements{id="backend", name="resolvePlugins", startTime="806.229416", owner="backend process"} 74.84732699999995
+theia_measurements{id="backend", name="deployPlugin", startTime="881.439778", owner="backend process"} 12.10456499999998
+theia_measurements{id="backend", name="deployPlugin", startTime="881.499574", owner="backend process"} 12.803747999999928
+theia_measurements{id="backend", name="deployPlugin", startTime="893.727658", owner="backend process"} 1.4999109999999973
+theia_measurements{id="backend", name="deployPlugin", startTime="894.362117", owner="backend process"} 6.3647379999999885
+theia_measurements{id="backend", name="deployPlugin", startTime="895.292193", owner="backend process"} 6.3706620000000385
+theia_measurements{id="backend", name="deployPlugin", startTime="900.804051", owner="backend process"} 1.3157070000000886
+theia_measurements{id="backend", name="deployPlugin", startTime="902.167181", owner="backend process"} 1.21120099999996
+theia_measurements{id="backend", name="deployPlugin", startTime="901.718484", owner="backend process"} 2.231424000000061
+theia_measurements{id="backend", name="deployPlugin", startTime="903.434112", owner="backend process"} 1.038300999999933
+theia_measurements{id="backend", name="deployPlugin", startTime="904.003523", owner="backend process"} 1.3296510000000126
+theia_measurements{id="backend", name="deployPlugin", startTime="904.600541", owner="backend process"} 1.3583479999999781
+theia_measurements{id="backend", name="deployPlugin", startTime="906.011181", owner="backend process"} 1.200965999999994
+theia_measurements{id="backend", name="deployPlugin", startTime="905.404497", owner="backend process"} 2.0093779999999697
+theia_measurements{id="backend", name="deployPlugin", startTime="907.263518", owner="backend process"} 0.8069540000000188
+theia_measurements{id="backend", name="deployPlugin", startTime="907.454694", owner="backend process"} 0.9305789999999661
+theia_measurements{id="backend", name="deployPlugin", startTime="908.117501", owner="backend process"} 0.8693590000000313
+theia_measurements{id="backend", name="deployPlugin", startTime="908.428302", owner="backend process"} 0.9431349999999838
+theia_measurements{id="backend", name="deployPlugin", startTime="909.417149", owner="backend process"} 0.6807860000000119
+theia_measurements{id="backend", name="deployPlugin", startTime="910.142371", owner="backend process"} 0.9417260000000169
+theia_measurements{id="backend", name="deployPlugin", startTime="909.050602", owner="backend process"} 4.22186499999998
+theia_measurements{id="backend", name="deployPlugin", startTime="911.136218", owner="backend process"} 3.692931000000044
+theia_measurements{id="backend", name="deployPlugin", startTime="913.331396", owner="backend process"} 1.9143789999999399
+theia_measurements{id="backend", name="deployPlugin", startTime="914.883878", owner="backend process"} 0.7650660000000471
+theia_measurements{id="backend", name="deployPlugin", startTime="915.294058", owner="backend process"} 0.7827530000000706
+theia_measurements{id="backend", name="deployPlugin", startTime="916.121293", owner="backend process"} 0.6744919999999865
+theia_measurements{id="backend", name="deployPlugin", startTime="915.694633", owner="backend process"} 1.607492000000093
+theia_measurements{id="backend", name="deployPlugin", startTime="916.841933", owner="backend process"} 2.95766900000001
+theia_measurements{id="backend", name="deployPlugin", startTime="917.375954", owner="backend process"} 2.744988000000035
+theia_measurements{id="backend", name="deployPlugin", startTime="919.85015", owner="backend process"} 0.8636229999999614
+theia_measurements{id="backend", name="deployPlugin", startTime="920.165193", owner="backend process"} 1.6292479999999614
+theia_measurements{id="backend", name="deployPlugin", startTime="921.845407", owner="backend process"} 1.0242130000000316
+theia_measurements{id="backend", name="deployPlugin", startTime="922.927791", owner="backend process"} 0.3973280000000159
+theia_measurements{id="backend", name="deployPlugin", startTime="920.761668", owner="backend process"} 2.7832369999999855
+theia_measurements{id="backend", name="deployPlugin", startTime="923.589052", owner="backend process"} 0.7423189999999522
+theia_measurements{id="backend", name="deployPlugin", startTime="924.392391", owner="backend process"} 4.166532000000075
+theia_measurements{id="backend", name="deployPlugin", startTime="928.609179", owner="backend process"} 1.2460139999999456
+theia_measurements{id="backend", name="deployPlugin", startTime="929.910778", owner="backend process"} 1.9010679999998956
+theia_measurements{id="backend", name="deployPlugin", startTime="923.373017", owner="backend process"} 12.761234999999942
+theia_measurements{id="backend", name="deployPlugin", startTime="931.866678", owner="backend process"} 4.899602000000073
+theia_measurements{id="backend", name="deployPlugin", startTime="936.217822", owner="backend process"} 3.130328000000077
+theia_measurements{id="backend", name="deployPlugin", startTime="936.904398", owner="backend process"} 3.2039099999999507
+theia_measurements{id="backend", name="deployPlugin", startTime="940.177779", owner="backend process"} 0.4446570000000065
+theia_measurements{id="backend", name="deployPlugin", startTime="939.433757", owner="backend process"} 4.663770999999997
+theia_measurements{id="backend", name="deployPlugin", startTime="940.674127", owner="backend process"} 4.710973999999965
+theia_measurements{id="backend", name="deployPlugin", startTime="944.181183", owner="backend process"} 1.905903999999964
+theia_measurements{id="backend", name="deployPlugin", startTime="946.160594", owner="backend process"} 1.6146810000000187
+theia_measurements{id="backend", name="deployPlugin", startTime="947.832797", owner="backend process"} 0.9643189999999322
+theia_measurements{id="backend", name="deployPlugin", startTime="948.871797", owner="backend process"} 0.4157199999999648
+theia_measurements{id="backend", name="deployPlugin", startTime="949.339811", owner="backend process"} 0.5866709999999102
+theia_measurements{id="backend", name="deployPlugin", startTime="949.984696", owner="backend process"} 0.5790080000000444
+theia_measurements{id="backend", name="deployPlugin", startTime="950.671483", owner="backend process"} 0.5544350000000122
+theia_measurements{id="backend", name="deployPlugin", startTime="951.283575", owner="backend process"} 0.407970999999975
+theia_measurements{id="backend", name="deployPlugin", startTime="951.74358", owner="backend process"} 0.9025940000000219
+theia_measurements{id="backend", name="deployPlugin", startTime="952.713099", owner="backend process"} 1.404186999999979
+theia_measurements{id="backend", name="deployPlugin", startTime="954.179523", owner="backend process"} 8.10018100000002
+theia_measurements{id="backend", name="deployPlugin", startTime="962.340455", owner="backend process"} 0.421408999999926
+theia_measurements{id="backend", name="deployPlugin", startTime="962.808866", owner="backend process"} 0.3557030000000623
+theia_measurements{id="backend", name="deployPlugin", startTime="963.210502", owner="backend process"} 2.584171999999967
+theia_measurements{id="backend", name="deployPlugin", startTime="965.856396", owner="backend process"} 2.4848989999999276
+theia_measurements{id="backend", name="deployPlugin", startTime="968.402181", owner="backend process"} 0.43554299999993873
+theia_measurements{id="backend", name="deployPlugin", startTime="968.882403", owner="backend process"} 0.620394000000033
+theia_measurements{id="backend", name="deployPlugin", startTime="969.554836", owner="backend process"} 0.7144439999999577
+theia_measurements{id="backend", name="deployPlugin", startTime="970.324556", owner="backend process"} 0.6199719999999616
+theia_measurements{id="backend", name="deployPlugin", startTime="971.019884", owner="backend process"} 4.2453089999999065
+theia_measurements{id="backend", name="deployPlugin", startTime="975.327461", owner="backend process"} 0.411085000000071
+theia_measurements{id="backend", name="deployPlugin", startTime="975.789366", owner="backend process"} 0.7850990000000593
+theia_measurements{id="backend", name="deployPlugin", startTime="976.630367", owner="backend process"} 0.34929699999997865
+theia_measurements{id="backend", name="deployPlugin", startTime="977.028135", owner="backend process"} 0.34293000000002394
+theia_measurements{id="backend", name="deployPlugin", startTime="977.442803", owner="backend process"} 2.2112109999999348
+theia_measurements{id="backend", name="deployPlugin", startTime="979.714379", owner="backend process"} 3.943465999999944
+theia_measurements{id="backend", name="deployPlugin", startTime="983.72393", owner="backend process"} 3.318057999999951
+theia_measurements{id="backend", name="deployPlugin", startTime="987.10771", owner="backend process"} 0.43503899999996065
+theia_measurements{id="backend", name="deployPlugin", startTime="987.596615", owner="backend process"} 0.7491440000000011
+theia_measurements{id="backend", name="deployPlugin", startTime="988.404937", owner="backend process"} 10.571874999999977
+theia_measurements{id="backend", name="deployPlugin", startTime="999.064025", owner="backend process"} 1.413285999999971
+theia_measurements{id="backend", name="deployPlugin", startTime="1000.576354", owner="backend process"} 2.261188999999945
+theia_measurements{id="backend", name="deployPlugin", startTime="1002.906926", owner="backend process"} 0.7745939999999791
+theia_measurements{id="backend", name="deployPlugin", startTime="1003.782689", owner="backend process"} 0.8024249999999711
+theia_measurements{id="backend", name="deployPlugin", startTime="1004.648607", owner="backend process"} 1.223386000000005
+theia_measurements{id="backend", name="deployPlugin", startTime="1005.945089", owner="backend process"} 0.7006629999999632
+theia_measurements{id="backend", name="deployPlugin", startTime="1006.710281", owner="backend process"} 1.081878999999958
+theia_measurements{id="backend", name="deployPlugin", startTime="1007.862276", owner="backend process"} 0.4439940000000888
+theia_measurements{id="backend", name="deployPlugin", startTime="1008.366012", owner="backend process"} 0.5135070000000042
+theia_measurements{id="backend", name="deployPlugin", startTime="1008.935132", owner="backend process"} 0.4137380000000803
+theia_measurements{id="backend", name="deployPlugin", startTime="1009.405965", owner="backend process"} 0.5550889999999526
+theia_measurements{id="backend", name="deployPlugin", startTime="1010.021396", owner="backend process"} 2.4953050000000303
+theia_measurements{id="backend", name="deployPlugin", startTime="1012.586113", owner="backend process"} 6.443171000000007
+theia_measurements{id="backend", name="deployPlugin", startTime="1019.088513", owner="backend process"} 1.3471379999999726
+theia_measurements{id="backend", name="deployPlugin", startTime="1020.518014", owner="backend process"} 0.395069000000035
+theia_measurements{id="backend", name="deployPlugin", startTime="1020.959788", owner="backend process"} 0.6540029999999888
+theia_measurements{id="backend", name="deployPlugin", startTime="1021.665943", owner="backend process"} 1.0386419999999816
+theia_measurements{id="backend", name="deployPlugin", startTime="1022.759403", owner="backend process"} 0.6318009999999958
+theia_measurements{id="backend", name="deployPlugin", startTime="1023.442164", owner="backend process"} 1.237875000000031
+theia_measurements{id="backend", name="deployPlugin", startTime="1024.737354", owner="backend process"} 0.7214749999998276
+theia_measurements{id="backend", name="deployPlugin", startTime="1025.531269", owner="backend process"} 0.754079000000047
+theia_measurements{id="backend", name="deployPlugin", startTime="1026.338946", owner="backend process"} 1.0569919999998092
+theia_measurements{id="backend", name="deployPlugin", startTime="1027.478386", owner="backend process"} 2.672418000000107
+theia_measurements{id="backend", name="deployPlugin", startTime="1030.203686", owner="backend process"} 0.9697320000000218
+theia_measurements{id="backend", name="deployPlugin", startTime="1031.226445", owner="backend process"} 0.8796379999998862
+theia_measurements{id="backend", name="deployPlugin", startTime="1032.158645", owner="backend process"} 0.9826190000001134
+theia_measurements{id="backend", name="deployPlugin", startTime="1033.195654", owner="backend process"} 1.0596729999999752
+theia_measurements{id="backend", name="deployPlugin", startTime="1034.314255", owner="backend process"} 0.6194629999999961
+theia_measurements{id="backend", name="deployPlugin", startTime="1034.983864", owner="backend process"} 0.974666999999954
+theia_measurements{id="backend", name="deployPlugin", startTime="1036.028751", owner="backend process"} 0.4486669999998867
+theia_measurements{id="backend", name="deployPlugin", startTime="1036.548436", owner="backend process"} 0.6417240000000675
+theia_measurements{id="backend", name="deployPlugin", startTime="1037.240357", owner="backend process"} 1.2159260000000813
+theia_measurements{id="backend", name="deployPlugin", startTime="1038.538472", owner="backend process"} 0.3828470000000834
+theia_measurements{id="backend", name="deployPlugin", startTime="1038.967037", owner="backend process"} 0.3702130000001489
+theia_measurements{id="backend", name="deployPlugin", startTime="1039.384157", owner="backend process"} 0.3904250000000502
+theia_measurements{id="backend", name="deployPlugin", startTime="1039.818033", owner="backend process"} 0.2995009999999638
+theia_measurements{id="backend", name="deployPlugin", startTime="1040.163674", owner="backend process"} 0.30391400000007707
+theia_measurements{id="backend", name="deployPlugin", startTime="1040.531287", owner="backend process"} 0.29787099999998645
+theia_measurements{id="backend", name="deployPlugin", startTime="1040.868317", owner="backend process"} 0.2898720000000594
+theia_measurements{id="backend", name="deployPlugin", startTime="1041.197182", owner="backend process"} 0.27086599999984173
+theia_measurements{id="backend", name="deployPlugin", startTime="1041.57578", owner="backend process"} 0.2805420000001959
+theia_measurements{id="backend", name="deployPlugin", startTime="1041.898016", owner="backend process"} 0.26440099999990707
+theia_measurements{id="backend", name="deployPlugin", startTime="1042.237125", owner="backend process"} 0.50678599999992
+theia_measurements{id="backend", name="deployPlugin", startTime="1042.791413", owner="backend process"} 0.32886100000018814
+theia_measurements{id="backend", name="deployPlugin", startTime="1043.165546", owner="backend process"} 2.6275809999999638
+theia_measurements{id="backend", name="deployPlugin", startTime="1045.850061", owner="backend process"} 0.8345229999999901
+theia_measurements{id="backend", name="deployPlugin", startTime="1046.736217", owner="backend process"} 0.6068590000002132
+theia_measurements{id="backend", name="deployPlugin", startTime="1047.389853", owner="backend process"} 0.3338060000000951
+theia_measurements{id="backend", name="deployPlugin", startTime="1047.767341", owner="backend process"} 0.8209030000000439
+theia_measurements{id="backend", name="deployPlugin", startTime="1048.64327", owner="backend process"} 1.809346000000005
+theia_measurements{id="backend", name="deployPluginsBatch", startTime="881.348578", owner="backend process"} 169.504499
+theia_measurements{id="backend", name="deployPlugins", startTime="806.197691", owner="backend process"} 244.74787000000003
+theia_measurements{id="backend", name="waitForDeployment", startTime="1051.106053", owner="backend process"} 0.4145209999999224
+theia_measurements{id="backend", name="syncPlugins", startTime="1051.556869", owner="backend process"} 48.393203000000085
+theia_measurements{id="backend", name="loadPlugins", startTime="1100.095965", owner="backend process"} 0.010406000000102722
+theia_measurements{id="backend", name="startPlugins", startTime="1100.225278", owner="backend process"} 0.9742240000000493
+theia_measurements{id="frontend-1", name="ndt.initialize", startTime="2129.8000000000466", owner="frontend page"} 3.199999999953434
+theia_measurements{id="frontend-1", name="u3i.initialize", startTime="2134.9000000001397", owner="frontend page"} 3
+theia_measurements{id="frontend-1", name="dMn.initialize", startTime="2137.9000000001397", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="hMi.initialize", startTime="2138", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="GX.initialize", startTime="2138", owner="frontend page"} 0.30000000004656613
+theia_measurements{id="frontend-1", name="Object.initialize", startTime="2138.4000000001397", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="eN.initialize", startTime="2138.4000000001397", owner="frontend page"} 0.09999999986030161
+theia_measurements{id="frontend-1", name="WKt.initialize", startTime="2138.5", owner="frontend page"} 0.10000000009313226
+theia_measurements{id="frontend-1", name="KZ.initialize", startTime="2138.600000000093", owner="frontend page"} 5.100000000093132
+theia_measurements{id="frontend-1", name="Hmt.initialize", startTime="2143.8000000000466", owner="frontend page"} 0.10000000009313226
+theia_measurements{id="frontend-1", name="XZ.initialize", startTime="2144", owner="frontend page"} 5
+theia_measurements{id="frontend-1", name="OZe.initialize", startTime="2149", owner="frontend page"} 0.10000000009313226
+theia_measurements{id="frontend-1", name="WZi.initialize", startTime="2149.2000000001863", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="jN.initialize", startTime="2149.2000000001863", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="zgr.initialize", startTime="2149.4000000001397", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="PPt.initialize", startTime="2149.4000000001397", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="vOt.initialize", startTime="2149.4000000001397", owner="frontend page"} 0.09999999986030161
+theia_measurements{id="frontend-1", name="COt.initialize", startTime="2149.5", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="pke.initialize", startTime="2149.600000000093", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="vz.initialize", startTime="2149.600000000093", owner="frontend page"} 0.10000000009313226
+theia_measurements{id="frontend-1", name="D_.configure", startTime="2149.8000000000466", owner="frontend page"} 105.60000000009313
+theia_measurements{id="frontend-1", name="LGt.configure", startTime="2255.7000000001863", owner="frontend page"} 0.09999999986030161
+theia_measurements{id="frontend-1", name="jA.configure", startTime="2256.4000000001397", owner="frontend page"} 0.19999999995343387
+theia_measurements{id="frontend-1", name="commands.onStart", startTime="2257", owner="frontend page"} 15.5
+theia_measurements{id="frontend-1", name="keybindings.onStart", startTime="2273", owner="frontend page"} 37.4000000001397
+theia_measurements{id="frontend-1", name="menus.onStart", startTime="2310.600000000093", owner="frontend page"} 7.699999999953434
+theia_measurements{id="frontend-1", name="uKt.onStart", startTime="2318.7000000001863", owner="frontend page"} 0.09999999986030161
+theia_measurements{id="frontend-1", name="Bze.onStart", startTime="2319", owner="frontend page"} 7
+theia_measurements{id="frontend-1", name="PX.onStart", startTime="2326.600000000093", owner="frontend page"} 13.800000000046566
+theia_measurements{id="frontend-1", name="D_.onStart", startTime="2342.100000000093", owner="frontend page"} 0.30000000004656613
+theia_measurements{id="frontend-1", name="I3i.onStart", startTime="2343", owner="frontend page"} 0.6000000000931323
+theia_measurements{id="frontend-1", name="uGt.onStart", startTime="2344", owner="frontend page"} 14.600000000093132
+theia_measurements{id="frontend-1", name="mMn.onStart", startTime="2358.9000000001397", owner="frontend page"} 0.19999999995343387
+theia_measurements{id="frontend-1", name="IGi.onStart", startTime="2359.4000000001397", owner="frontend page"} 0.39999999990686774
+theia_measurements{id="frontend-1", name="L9e.onStart", startTime="2360.100000000093", owner="frontend page"} 1.1000000000931323
+theia_measurements{id="frontend-1", name="iqt.onStart", startTime="2361.5", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="wKt.onStart", startTime="2361.9000000001397", owner="frontend page"} 0.5
+theia_measurements{id="frontend-1", name="qgt.onStart", startTime="2362.7000000001863", owner="frontend page"} 0.09999999986030161
+theia_measurements{id="frontend-1", name="GLn.onStart", startTime="2363.100000000093", owner="frontend page"} 0.5
+theia_measurements{id="frontend-1", name="jdt.onStart", startTime="2363.9000000001397", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="qoe.onStart", startTime="2364.2000000001863", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="Boe.onStart", startTime="2364.4000000001397", owner="frontend page"} 0.19999999995343387
+theia_measurements{id="frontend-1", name="eN.onStart", startTime="2365", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="rye.onStart", startTime="2365.4000000001397", owner="frontend page"} 0.09999999986030161
+theia_measurements{id="frontend-1", name="KZ.onStart", startTime="2365.8000000000466", owner="frontend page"} 2.6000000000931323
+theia_measurements{id="frontend-1", name="j$t.onStart", startTime="2368.600000000093", owner="frontend page"} 0.39999999990686774
+theia_measurements{id="frontend-1", name="Myi.onStart", startTime="2369.4000000001397", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="Rze.onStart", startTime="2369.9000000001397", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="gvt.onStart", startTime="2370.2000000001863", owner="frontend page"} 0.09999999986030161
+theia_measurements{id="frontend-1", name="gUe.onStart", startTime="2370.5", owner="frontend page"} 1.9000000001396984
+theia_measurements{id="frontend-1", name="qXi.onStart", startTime="2372.7000000001863", owner="frontend page"} 0.2999999998137355
+theia_measurements{id="frontend-1", name="FYt.onStart", startTime="2373.4000000001397", owner="frontend page"} 6.899999999906868
+theia_measurements{id="frontend-1", name="Pvt.onStart", startTime="2380.8000000000466", owner="frontend page"} 0.5
+theia_measurements{id="frontend-1", name="xae.onStart", startTime="2381.7000000001863", owner="frontend page"} 0.19999999995343387
+theia_measurements{id="frontend-1", name="H7n.onStart", startTime="2382.3000000000466", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="vyt.onStart", startTime="2382.600000000093", owner="frontend page"} 0.19999999995343387
+theia_measurements{id="frontend-1", name="yHe.onStart", startTime="2383.100000000093", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="ECt.onStart", startTime="2383.4000000001397", owner="frontend page"} 0.09999999986030161
+theia_measurements{id="frontend-1", name="Bae.onStart", startTime="2383.9000000001397", owner="frontend page"} 2.300000000046566
+theia_measurements{id="frontend-1", name="tfr.onStart", startTime="2386.5", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="mKe.onStart", startTime="2386.9000000001397", owner="frontend page"} 0.39999999990686774
+theia_measurements{id="frontend-1", name="txt.onStart", startTime="2387.4000000001397", owner="frontend page"} 0.09999999986030161
+theia_measurements{id="frontend-1", name="KOe.onStart", startTime="2387.8000000000466", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="V1e.onStart", startTime="2388.100000000093", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="Sxt.onStart", startTime="2388.4000000001397", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="yci.onStart", startTime="2388.7000000001863", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="xci.onStart", startTime="2388.8000000000466", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="u$.onStart", startTime="2388.9000000001397", owner="frontend page"} 0.09999999986030161
+theia_measurements{id="frontend-1", name="H0.onStart", startTime="2389.100000000093", owner="frontend page"} 0.39999999990686774
+theia_measurements{id="frontend-1", name="pC.onStart", startTime="2389.9000000001397", owner="frontend page"} 0.19999999995343387
+theia_measurements{id="frontend-1", name="wvr.onStart", startTime="2390.5", owner="frontend page"} 0.20000000018626451
+theia_measurements{id="frontend-1", name="w2.onStart", startTime="2391", owner="frontend page"} 0.6000000000931323
+theia_measurements{id="frontend-1", name="n7.onStart", startTime="2392", owner="frontend page"} 0.10000000009313226
+theia_measurements{id="frontend-1", name="fAt.onStart", startTime="2392.4000000001397", owner="frontend page"} 0.09999999986030161
+theia_measurements{id="frontend-1", name="kZe.onStart", startTime="2392.8000000000466", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="owr.onStart", startTime="2393.100000000093", owner="frontend page"} 0.19999999995343387
+theia_measurements{id="frontend-1", name="gwr.onStart", startTime="2393.5", owner="frontend page"} 0.20000000018626451
+theia_measurements{id="frontend-1", name="vwr.onStart", startTime="2393.9000000001397", owner="frontend page"} 0.09999999986030161
+theia_measurements{id="frontend-1", name="bwr.onStart", startTime="2394.4000000001397", owner="frontend page"} 0.19999999995343387
+theia_measurements{id="frontend-1", name="ywr.onStart", startTime="2394.8000000000466", owner="frontend page"} 0.19999999995343387
+theia_measurements{id="frontend-1", name="_wr.onStart", startTime="2395.3000000000466", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="wwr.onStart", startTime="2395.7000000001863", owner="frontend page"} 0.09999999986030161
+theia_measurements{id="frontend-1", name="Cwr.onStart", startTime="2396.100000000093", owner="frontend page"} 0.19999999995343387
+theia_measurements{id="frontend-1", name="xwr.onStart", startTime="2396.600000000093", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="kwr.onStart", startTime="2397", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="Dwr.onStart", startTime="2397.3000000000466", owner="frontend page"} 0.19999999995343387
+theia_measurements{id="frontend-1", name="fmi.onStart", startTime="2397.8000000000466", owner="frontend page"} 0.10000000009313226
+theia_measurements{id="frontend-1", name="mmi.onStart", startTime="2398.100000000093", owner="frontend page"} 0.10000000009313226
+theia_measurements{id="frontend-1", name="_mi.onStart", startTime="2398.5", owner="frontend page"} 0.10000000009313226
+theia_measurements{id="frontend-1", name="KZe.onStart", startTime="2398.9000000001397", owner="frontend page"} 0.19999999995343387
+theia_measurements{id="frontend-1", name="mQe.onStart", startTime="2399.4000000001397", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="Object.onStart", startTime="2399.600000000093", owner="frontend page"} 0.19999999995343387
+theia_measurements{id="frontend-1", name="tTr.onStart", startTime="2400.600000000093", owner="frontend page"} 0.10000000009313226
+theia_measurements{id="frontend-1", name="a0i.onStart", startTime="2401.100000000093", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="n6e.onStart", startTime="2401.3000000000466", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="pTe.onStart", startTime="2401.600000000093", owner="frontend page"} 0.10000000009313226
+theia_measurements{id="frontend-1", name="LMt.onStart", startTime="2402", owner="frontend page"} 0.20000000018626451
+theia_measurements{id="frontend-1", name="xTe.onStart", startTime="2402.5", owner="frontend page"} 0.8000000000465661
+theia_measurements{id="frontend-1", name="TTe.onStart", startTime="2403.5", owner="frontend page"} 0.10000000009313226
+theia_measurements{id="frontend-1", name="waitForDeployment", startTime="2400.4000000001397", owner="frontend page"} 47.89999999990687
+theia_measurements{id="frontend-1", name="HMt.onStart", startTime="2403.8000000000466", owner="frontend page"} 46.10000000009313
+theia_measurements{id="frontend-1", name="TK.onStart", startTime="2450.100000000093", owner="frontend page"} 0.10000000009313226
+theia_measurements{id="frontend-1", name="fFe.onStart", startTime="2450.5", owner="frontend page"} 0.10000000009313226
+theia_measurements{id="frontend-1", name="m1i.onStart", startTime="2450.9000000001397", owner="frontend page"} 0.09999999986030161
+theia_measurements{id="frontend-1", name="Yie.onStart", startTime="2451.2000000001863", owner="frontend page"} 0
+theia_measurements{id="frontend-1", name="startContributions", startTime="2079.9000000001397", owner="frontend page"} 371.5999999998603
+theia_measurements{id="frontend-1", name="syncPlugins", startTime="2448.4000000001397", owner="frontend page"} 291.30000000004657
+theia_measurements{id="frontend-1", name="rye.initializeLayout", startTime="2773", owner="frontend page"} 13.400000000139698
+theia_measurements{id="frontend-1", name="KOn.initializeLayout", startTime="2786.7000000001863", owner="frontend page"} 3
+theia_measurements{id="frontend-1", name="jD.initializeLayout", startTime="2789.9000000001397", owner="frontend page"} 12.800000000046566
+theia_measurements{id="frontend-1", name="jN.initializeLayout", startTime="2802.8000000000466", owner="frontend page"} 1.9000000001396984
+theia_measurements{id="frontend-1", name="loadPlugins", startTime="2859.5", owner="frontend page"} 127.30000000004657
+theia_measurements{id="frontend-1", name="H0.initializeLayout", startTime="2804.9000000001397", owner="frontend page"} 1069.5999999998603
+theia_measurements{id="frontend-1", name="dYe.initializeLayout", startTime="3875.2000000001863", owner="frontend page"} 7.599999999860302
+theia_measurements{id="frontend-1", name="w2.initializeLayout", startTime="3883", owner="frontend page"} 7.2000000001862645
+theia_measurements{id="frontend-1", name="n7.initializeLayout", startTime="3890.3000000000466", owner="frontend page"} 10.100000000093132
+theia_measurements{id="frontend-1", name="rte.initializeLayout", startTime="3900.600000000093", owner="frontend page"} 4.300000000046566
+theia_measurements{id="frontend-1", name="iR.initializeLayout", startTime="3905.2000000001863", owner="frontend page"} 14.099999999860302
+theia_measurements{id="frontend-1", name="lFe.initializeLayout", startTime="3919.4000000001397", owner="frontend page"} 4.399999999906868
+theia_measurements{id="frontend-1", name="Yie.initializeLayout", startTime="3923.9000000001397", owner="frontend page"} 0.39999999990686774
+theia_measurements{id="frontend-1", name="initializeLayout", startTime="2495", owner="frontend page"} 1429.7000000001863
+theia_measurements{id="frontend-1", name="R0e.onDidInitializeLayout", startTime="3924.8000000000466", owner="frontend page"} 0.30000000004656613
+theia_measurements{id="frontend-1", name="xQi.onDidInitializeLayout", startTime="3929.7000000001863", owner="frontend page"} 1.1999999999534339
+theia_measurements{id="frontend-1", name="gKe.onDidInitializeLayout", startTime="3932.8000000000466", owner="frontend page"} 0.19999999995343387
+theia_measurements{id="frontend-1", name="iO.onDidInitializeLayout", startTime="3939.5", owner="frontend page"} 0.20000000018626451
+theia_measurements{id="frontend-1", name="oMt.onDidInitializeLayout", startTime="3942.2000000001863", owner="frontend page"} 1.3999999999068677
+theia_measurements{id="frontend-1", name="revealShell", startTime="3944.5", owner="frontend page"} 821.3000000000466
+theia_measurements{id="frontend-1", name="frontend-all-settled", startTime="2079.8000000000466", owner="frontend page"} 2686.600000000093
+theia_measurements{id="backend", name="frontend", startTime="9375.307432", owner="backend process"} 2553.7540339999996
+theia_measurements{id="frontend-1", name="startPlugins", startTime="2992.4000000001397", owner="frontend page"} 2614.899999999907
+
+
+
+
+playwright_total_time 7235
